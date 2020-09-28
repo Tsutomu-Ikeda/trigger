@@ -17,3 +17,9 @@ cd ~/trigger
 python3 -m venv venv
 source venv/bin/activate
 pip install poetry
+
+# Nginx
+## 日本時間と日本語に対応させる
+sudo timedatectl set-timezone Asia/Tokyo
+sudo localectl set-locale LANG=ja_JP.UTF-8
+sudo localectl set-keymap jp106
