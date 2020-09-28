@@ -1,0 +1,15 @@
+version: "3.0"
+services:
+  nginx:
+    build: ./nginx
+    depends_on:
+      - app
+    ports: "8000:8000"
+  app:
+    build: ./app
+    volumes:
+      - ./:/app
+    ports:
+      - "8080:8080"
+    commnads: python app.py
+
