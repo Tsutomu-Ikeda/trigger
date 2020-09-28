@@ -3,9 +3,7 @@ import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
@@ -40,40 +38,43 @@ const styles = (theme: Theme) =>
     button: {
       borderColor: lightColor,
     },
+    headerTitle: {
+      [theme.breakpoints.down('xs')]: {
+        fontSize: '1.1em'
+      }
+    },
   });
 
+const routes = [{
+  path: "/",
+  label: "マイページ",
+}, {
+  path: "/matching",
+  label: "話をしたい",
+}, {
+  path: "/listen",
+  label: "みんなの相談",
+}, {
+  path: "/money",
+  label: "収益",
+}];
+
 interface HeaderProps extends WithStyles<typeof styles> {
-  onDrawerToggle: () => void;
 }
 
 function Header(props: HeaderProps) {
-  const { classes, onDrawerToggle } = props;
+  const { classes } = props;
   const location = useLocation();
-
   return (
-    <React.Fragment>
+    <>
       <AppBar color="primary" position="sticky" elevation={0}>
         <Toolbar>
           <Grid container alignItems="center" spacing={1}>
             <Grid item xs>
-              <Typography color="inherit" variant="h5" component="h1">
-                建前なしの就活サイト
-              </Typography>
+              <Typography color="inherit" variant="h5" component="h1" className={classes.headerTitle}>建前なしの就活サイト</Typography>
             </Grid>
           </Grid>
           <Grid container spacing={1} alignItems="center">
-            <Hidden smUp>
-              <Grid item>
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  onClick={onDrawerToggle}
-                  className={classes.menuButton}
-                >
-                  <MenuIcon />
-                </IconButton>
-              </Grid>
-            </Hidden>
             <Grid item xs />
             <Grid item>
               <Tooltip title="Alerts • No alerts">
@@ -98,11 +99,12 @@ function Header(props: HeaderProps) {
         elevation={0}
       >
         <Tabs value={location.pathname} textColor="inherit">
-          <Tab textColor="inherit" label="トップ" value="/" href="/" />
-          <Tab textColor="inherit" label="マッチング" value="/matching" href="/matching" />
+          {routes.map((item) => (
+            <Tab textColor="inherit" label={item.label} value={item.path} href={item.path} key={item.path} />
+          ))}
         </Tabs>
       </AppBar>
-    </React.Fragment>
+    </>
   );
 }
 

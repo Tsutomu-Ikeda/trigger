@@ -16,6 +16,8 @@ import NotFound from "./views/NotFound";
 
 import Top from "./views/Top";
 import Matching from "./views/Matching";
+import Listen from "./views/Listen";
+import Money from "./views/Money";
 
 import Header from './components/Header';
 
@@ -50,20 +52,22 @@ const routes = [{
 }, {
   path: "/matching",
   component: Matching,
+}, {
+  path: "/listen",
+  component: Listen,
+}, {
+  path: "/money",
+  component: Money,
 }];
 
 export default function App() {
   const classes = useStyles();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
 
   return (
     <React.Fragment>
       <CssBaseline />
       <Router>
-        <Header onDrawerToggle={handleDrawerToggle} />
+        <Header />
 
         <div className={classes.app}>
           <main className={classes.main}>
