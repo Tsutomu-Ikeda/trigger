@@ -1,0 +1,30 @@
+name: CI
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'front/**'
+      - '.github/workflows/build.yml'
+      - '.github/workflows/build-and-deploy.yml'
+jobs:
+  build:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: build
+      - name: Publish to AWS S3
+        uses: opspresso/action-s3-sync@master
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: "ap-northeast-1"
+          FROM_PATH: "./build/"
+          DEST_PATH: ${{ secrets.AWS_BUCKET_NAME }}
+          OPTIONS: "--follow-symlinks --delete --cache-control max-age=300"
