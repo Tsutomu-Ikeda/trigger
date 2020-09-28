@@ -2,15 +2,12 @@ version: "3.0"
 services:
   nginx:
     build: ./nginx
-    # depends_on:
-    #   - app
+    depends_on:
+      - app
     ports:
       - "80:80"
-  # app:
-  #   build: ./app
-  #   volumes:
-  #     - ./:/app
-  #   ports:
-  #     - "8080:8080"
-  #   command: python app.py
-
+  app:
+    build: ./app
+    volumes:
+      - .:/app
+    command: python app.py
