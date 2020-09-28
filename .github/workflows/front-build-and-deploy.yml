@@ -25,5 +25,5 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: "ap-northeast-1"
           FROM_PATH: "./front/build/"
-          DEST_PATH: ${{ secrets.AWS_OUTPUT_S3_URI }}
+          DEST_PATH: "s3://trigger-front/build"
           OPTIONS: "--follow-symlinks --delete"
