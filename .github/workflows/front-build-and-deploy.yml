@@ -5,8 +5,7 @@ on:
       - develop
     paths:
       - 'front/**'
-      - '.github/workflows/build.yml'
-      - '.github/workflows/build-and-deploy.yml'
+      - '.github/workflows/front-build-and-deploy.yml'
 jobs:
   build:
     name: Build and Deploy
