@@ -15,16 +15,16 @@ jobs:
       - uses: actions/checkout@v2
       - uses: borales/actions-yarn@v2.0.0
         with:
-          cmd: install
+          cmd: --cwd front install
       - uses: borales/actions-yarn@v2.0.0
         with:
-          cmd: build
+          cmd: --cwd front build
       - name: Publish to AWS S3
         uses: opspresso/action-s3-sync@master
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: "ap-northeast-1"
-          FROM_PATH: "./build/"
-          DEST_PATH: ${{ secrets.AWS_BUCKET_NAME }}
-          OPTIONS: "--follow-symlinks --delete --cache-control max-age=300"
+          FROM_PATH: "./front/dist/"
+          DEST_PATH: ${{ secrets.AWS_OUTPUT_S3_URI }}
+          OPTIONS: "--follow-symlinks --delete"
