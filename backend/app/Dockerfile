@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.8-slim
 
 LABEL  maintainer "nukopy <pytwbf201830@gmail.com>"
 
@@ -16,6 +16,4 @@ COPY poetry.lock pyproject.toml ./
 RUN poetry config virtualenvs.create false \
     && poetry install --no-dev
 
-ADD ./ /app
-
-# ENV PYTHONPATH "/app/"
+COPY app.py ./

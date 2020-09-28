@@ -4,12 +4,10 @@ services:
     build: ./nginx
     depends_on:
       - app
-    ports: "8000:8000"
+    ports:
+      - "80:80"
   app:
     build: ./app
     volumes:
-      - ./:/app
-    ports:
-      - "8080:8080"
-    commnads: python app.py
-
+      - .:/app
+    command: python app.py
