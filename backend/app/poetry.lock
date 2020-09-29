@@ -151,6 +151,19 @@ Flask-SQLAlchemy = ">=1.0"
 alembic = ">=0.7"
 
 [[package]]
+category = "dev"
+description = "Replace default `flask shell` command by similar command running IPython."
+name = "flask-shell-ipython"
+optional = false
+python-versions = "*"
+version = "0.4.1"
+
+[package.dependencies]
+IPython = ">=5.0.0"
+click = "*"
+flask = ">=1.0"
+
+[[package]]
 category = "main"
 description = "Adds SQLAlchemy support to your Flask application."
 name = "flask-sqlalchemy"
@@ -540,8 +553,7 @@ dev = ["pytest", "pytest-timeout", "coverage", "tox", "sphinx", "pallets-sphinx-
 watchdog = ["watchdog"]
 
 [metadata]
-content-hash = "b2f59cf6a5691ba04fcf04a6f1f1b700b01df4f3818f4c2af3f57940ecb591b5"
-lock-version = "1.0"
+content-hash = "78968c66871fdc5460b47619d5a106ffbe1070b1c33f0069ee8750c77699fc3b"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -596,6 +608,10 @@ flask = [
 flask-migrate = [
     {file = "Flask-Migrate-2.5.3.tar.gz", hash = "sha256:a69d508c2e09d289f6e55a417b3b8c7bfe70e640f53d2d9deb0d056a384f37ee"},
     {file = "Flask_Migrate-2.5.3-py2.py3-none-any.whl", hash = "sha256:4dc4a5cce8cbbb06b8dc963fd86cf8136bd7d875aabe2d840302ea739b243732"},
+]
+flask-shell-ipython = [
+    {file = "flask-shell-ipython-0.4.1.tar.gz", hash = "sha256:fb3b390f4dc03d7a960c62c5b51ce4deca19ceff77e4db3d4670012adc529ebd"},
+    {file = "flask_shell_ipython-0.4.1-py2.py3-none-any.whl", hash = "sha256:f212b4fad6831edf652799c719cd05fd0716edfaa5506eb41ff9ef09109890d3"},
 ]
 flask-sqlalchemy = [
     {file = "Flask-SQLAlchemy-2.4.4.tar.gz", hash = "sha256:bfc7150eaf809b1c283879302f04c42791136060c6eeb12c0c6674fb1291fae5"},
