@@ -14,6 +14,6 @@ RUN set -ex \
 # install Python packages
 COPY poetry.lock pyproject.toml ./
 RUN poetry config virtualenvs.create false \
-    && poetry install --no-dev
+    && poetry install
 
 COPY ./ ./
