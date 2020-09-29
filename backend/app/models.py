@@ -9,7 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
-class Student(db.Model):
+class Students(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
     date_of_birth = db.Column(db.DateTime, unique=False, nullable=False)
@@ -19,7 +19,7 @@ class Student(db.Model):
     # certificate_id =  照明
     user_type = db.Column(db.String, unique=False, nullable=False)
     affiliation = db.relationship(
-        "University", backref="person", lazy=True
+        "Universities", backref="person", lazy=True
     )  # 所属, TODO relation の整備
     is_authenticated = db.Column(
         db.Boolean, unique=False, nullable=False, default=False
@@ -34,7 +34,7 @@ class Student(db.Model):
     )
 
 
-class Worker(db.Model):
+class Workers(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
     date_of_birth = db.Column(db.DateTime, unique=False, nullable=False)
@@ -44,16 +44,16 @@ class Worker(db.Model):
     # certificate_id =  照明
     user_type = db.Column(db.String, unique=False, nullable=False)
     # affiliation = db.relationship(
-    #     "Company", backref="person", lazy=True
+    #     "Companies", backref="person", lazy=True
     # )  # 所属, TODO relation の整備
     # job = (
-    #     "Job", backref="person", lazy=True
+    #     "Jobs", backref="person", lazy=True
     # )  # TODO relation の整備
     # department = (
-    #     "Department", backref="person", lazy=True
+    #     "Departments", backref="person", lazy=True
     # )  # 部署, TODO relation の整備
     # position = (
-    #     "Position", backref="person", lazy=True
+    #     "Positions", backref="person", lazy=True
     # )  # 役職, TODO relation の整備
     is_authenticated = db.Column(
         db.Boolean, unique=False, nullable=False, default=False
@@ -66,3 +66,13 @@ class Worker(db.Model):
     cupdated_at = db.Column(
         Timestamp, unique=False, nullable=False, default=datetime.utcnow
     )
+
+
+class Universities(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), unique=False, nullable=False)
+
+
+class Companies(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), unique=False, nullable=False)
