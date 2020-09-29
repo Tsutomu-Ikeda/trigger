@@ -9,5 +9,5 @@ services:
   app:
     build: ./app
     volumes:
-      - .:/app
+      - ./app/:/app
     command: python app.py
