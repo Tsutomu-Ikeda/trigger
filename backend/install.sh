@@ -2,8 +2,9 @@ sudo yum update -y
 sudo yum install -y git
 
 # Docker
-sudo yum install -y docker git
-sudo service docker start
+sudo yum install -y docker
+$ sudo systemctl start docker
+$ sudo systemctl enable docker  # 自動起動有効
 sudo usermod -a -G docker ec2-user  # Docker の実行に sudo いらなくなる
 
 # Docker Compose
@@ -23,3 +24,7 @@ pip install poetry
 sudo timedatectl set-timezone Asia/Tokyo
 sudo localectl set-locale LANG=ja_JP.UTF-8
 sudo localectl set-keymap jp106
+
+# gitconfig
+git config --global user.name "[user]"
+git config --global user.email "[mail]"
