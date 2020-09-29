@@ -19,7 +19,7 @@ class Students(db.Model):
     certificate_url = db.Column(db.String, unique=True, nullable=False)  # 照明
     user_type = db.Column(db.String, unique=False, nullable=False)
     affiliation = db.relationship(
-        "Universities", backref="person", lazy=True
+        "Universities", backref="students", lazy=True
     )  # 所属, TODO relation の整備
     is_authenticated = db.Column(
         db.Boolean, unique=False, nullable=False, default=False
@@ -43,18 +43,16 @@ class Workers(db.Model):
     passowrd = db.Column(db.String, unique=False, nullable=False)
     certificate_url = db.Column(db.String, unique=True, nullable=False)  # 照明
     user_type = db.Column(db.String, unique=False, nullable=False)
-    # affiliation = db.relationship(
-    #     "Companies", backref="person", lazy=True
-    # )  # 所属, TODO relation の整備
-    # job = (
-    #     "Jobs", backref="person", lazy=True
-    # )  # TODO relation の整備
-    # department = (
-    #     "Departments", backref="person", lazy=True
-    # )  # 部署, TODO relation の整備
-    # position = (
-    #     "Positions", backref="person", lazy=True
-    # )  # 役職, TODO relation の整備
+    affiliation = db.relationship(
+        "Companies", backref="workers", lazy=True
+    )  # 所属, TODO relation の整備
+    job = db.relationship("Jobs", backref="workers", lazy=True)  # TODO relation の整備
+    department = db.relationship(
+        "Departments", backref="workers", lazy=True
+    )  # 部署, TODO relation の整備
+    position = db.relationship(
+        "Positions", backref="workers", lazy=True
+    )  # 役職, TODO relation の整備
     is_authenticated = db.Column(
         db.Boolean, unique=False, nullable=False, default=False
     )
