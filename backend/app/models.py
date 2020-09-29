@@ -16,7 +16,7 @@ class Students(db.Model):
     tel_number = db.Column(db.String(11), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     passowrd = db.Column(db.String, unique=False, nullable=False)
-    # certificate_id =  照明
+    certificate_url = db.Column(db.String, unique=True, nullable=False)  # 照明
     user_type = db.Column(db.String, unique=False, nullable=False)
     affiliation = db.relationship(
         "Universities", backref="person", lazy=True
@@ -41,7 +41,7 @@ class Workers(db.Model):
     tel_number = db.Column(db.String(11), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     passowrd = db.Column(db.String, unique=False, nullable=False)
-    # certificate_id =  照明
+    certificate_url = db.Column(db.String, unique=True, nullable=False)  # 照明
     user_type = db.Column(db.String, unique=False, nullable=False)
     # affiliation = db.relationship(
     #     "Companies", backref="person", lazy=True
