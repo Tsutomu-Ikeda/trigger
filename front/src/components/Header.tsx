@@ -8,8 +8,13 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import Container from '@material-ui/core/Container';
+import Fab from '@material-ui/core/Fab';
+import Zoom from '@material-ui/core/Zoom';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import { useLocation } from "react-router-dom";
@@ -47,12 +52,18 @@ const styles = (theme: Theme) =>
         fontSize: '1.2em'
       }
     },
+    scrollTop: {
+      position: 'fixed',
+      zIndex: 10,
+      bottom: theme.spacing(3),
+      right: theme.spacing(3),
+    },
   });
 
 const routes = {
   "/":
     { label: "マイページ" },
-  "/matching":
+  "/company/search":
     { label: "話をしたい" },
   // "/listen":
   //   { label: "みんなの相談" }
@@ -62,6 +73,39 @@ const sanitizeRoute = (route: string) => route in routes && route;
 
 interface HeaderProps extends WithStyles<typeof styles> {
 }
+
+interface ScrollTopProps extends WithStyles<typeof styles> {
+  window?: () => Window;
+  children: React.ReactElement;
+}
+
+const ScrollTop = withStyles(styles)((props: ScrollTopProps) => {
+  const { children, window } = props;
+  const { classes } = props;
+  const trigger = useScrollTrigger({
+    target: window ? window() : undefined,
+    disableHysteresis: true,
+    threshold: 100,
+  });
+
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    const anchor = ((event.target as HTMLDivElement).ownerDocument || document).querySelector(
+      '#root',
+    );
+    console.log(anchor);
+    if (anchor) {
+      anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  return (
+    <Zoom in={trigger}>
+      <div onClick={handleClick} role="presentation" className={classes.scrollTop}>
+        {children}
+      </div>
+    </Zoom>
+  );
+});
 
 function Header(props: HeaderProps) {
   const { state, dispatch } = useContext(store);
@@ -122,19 +166,29 @@ function Header(props: HeaderProps) {
         </Toolbar>
       </AppBar>
       { state.isAuthenticated ?
-        <AppBar
-          component="div"
-          className={classes.secondaryBar}
-          color="primary"
-          position="static"
-          elevation={0}
-        >
-          <Tabs value={sanitizeRoute(location.pathname)} textColor="inherit">
-            {Object.entries(routes).map(([key, item]) => (
-              <Tab textColor="inherit" label={item.label} value={key} href={key} key={key} />
-            ))}
-          </Tabs>
-        </AppBar>
+        <>
+          <AppBar
+            component="div"
+            className={classes.secondaryBar}
+            color="primary"
+            position="static"
+            elevation={0}
+          >
+            <Container maxWidth="md">
+              <Tabs value={sanitizeRoute(location.pathname)} textColor="inherit">
+                {Object.entries(routes).map(([key, item]) => (
+                  <Tab textColor="inherit" label={item.label} value={key} href={key} key={key} />
+                ))}
+              </Tabs>
+            </Container>
+          </AppBar>
+
+          <ScrollTop {...props}>
+            <Fab color="secondary" size="small" aria-label="scroll back to top">
+              <KeyboardArrowUpIcon />
+            </Fab>
+          </ScrollTop>
+        </>
         : null}
     </>
   );

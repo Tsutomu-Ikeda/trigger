@@ -14,8 +14,8 @@ const theme = createMuiTheme({
     },
     secondary: {
       main: "#4f93ff",
-      dark: "#ba000d",
-      contrastText: "#000",
+      dark: "#3e73c7",
+      contrastText: "#fff",
     },
     background: {
       default: "#eee",
@@ -25,11 +25,11 @@ const theme = createMuiTheme({
 });
 
 ReactDOM.render(
-  <React.StrictMode>
-    <MuiThemeProvider theme={theme}>
-      <App />
-    </MuiThemeProvider>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <MuiThemeProvider theme={theme}>
+    <App />
+  </MuiThemeProvider>,
+  // </React.StrictMode>
   document.getElementById('root')
 );
 

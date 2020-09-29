@@ -2,6 +2,7 @@ import React from "react";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles } from "@material-ui/core/styles";
+import Container from '@material-ui/core/Container';
 import {
   BrowserRouter as Router,
   Route,
@@ -10,8 +11,8 @@ import {
 } from "react-router-dom";
 
 import NotFound from "./views/NotFound";
+import Company from "./views/Company";
 import Top from "./views/Top";
-import Matching from "./views/Matching";
 import SignIn from "./views/SignIn";
 
 import { AppProvider } from "./store/store";
@@ -37,11 +38,11 @@ const routes = [{
   path: "/",
   component: Top,
 }, {
-  path: "/matching",
-  component: Matching,
-// }, {
-//   path: "/listen",
-//   component: Listen,
+  path: "/company/search",
+  component: Company,
+  // }, {
+  //   path: "/listen",
+  //   component: Listen,
 }, {
   path: "/sign_in",
   component: SignIn,
@@ -56,23 +57,25 @@ export default function App() {
         <CssBaseline />
         <Router>
           <Header />
-          <div className={classes.app}>
-            <main className={classes.main}>
-              <Switch>
-                <Route path="*/index.html">
-                  <Redirect to="." />
-                </Route>
-                {routes.map((item) => (
-                  <Route path={item.path} component={item.component} key={item.path} exact />
-                ))}
-                <Route>
-                  <NotFound />
-                </Route>
-              </Switch>
-            </main>
-          </div>
+          <Container maxWidth="md" style={{marginTop: "20px"}}>
+            <div className={classes.app}>
+              <main className={classes.main}>
+                <Switch>
+                  <Route path="*/index.html">
+                    <Redirect to="." />
+                  </Route>
+                  {routes.map((item) => (
+                    <Route path={item.path} component={item.component} key={item.path} exact />
+                  ))}
+                  <Route>
+                    <NotFound />
+                  </Route>
+                </Switch>
+              </main>
+            </div>
+          </Container>
         </Router>
       </React.Fragment>
-    </AppProvider>
+    </AppProvider >
   );
 }
