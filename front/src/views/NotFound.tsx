@@ -1,9 +1,15 @@
 import React from "react";
 
+import AuthRequired from "../components/AuthRequired";
+
 export default function NotFound() {
   return (
-    <div>
-      お探しのページは見つかりませんでした。
-    </div>
+    <AuthRequired>
+      <>
+        <div>
+          お探しのページは見つかりませんでした。
+       </div>
+      </>
+    </AuthRequired>
   );
 }
