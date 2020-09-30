@@ -75,6 +75,7 @@ class Worker(Base):
     cupdated_at = db.Column(
         Timestamp, unique=False, nullable=False, default=datetime.utcnow
     )
+    comment = db.Column(db.String(80), unique=False, nullable=True)
 
 
 class University(Base):
@@ -93,3 +94,16 @@ class Job(Base):
     __tablename__ = "jobs"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
+
+
+class Match(Base):
+    __tablename__ = "matches"
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime, unique=False, nullable=True)
+    speaker_id = db.Column(db.Integer, db.ForeignKey("workers.id"))
+    listener_id = db.Column(db.Integer, db.ForeignKey("students.id"))
+    meeting_length = db.Column(db.Integer)
+    audio_url = db.Column(db.String(120), unique=True, nullable=True)
+    is_matched = db.Column(db.Boolean, unique=False, nullable=True)
+    is_done_meeting = db.Column(db.Boolean, unique=False, nullable=True, default=False)
+    is_done_payment = db.Column(db.Boolean, unique=False, nullable=True, default=False)
