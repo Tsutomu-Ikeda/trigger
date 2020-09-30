@@ -13,7 +13,7 @@ const AuthRequired = ({ children }: { children: JSX.Element }) => {
   return state.isAuthenticated
     ? children
     : <Redirect
-      to={`/sign_in?redirect_to=${encodeURIComponent(location.pathname)}`}
+      to={`/sign_in?redirect_to=${encodeURIComponent(`${location.pathname}${location.search}${location.hash}`)}`}
     />;
 }
 
