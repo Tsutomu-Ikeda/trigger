@@ -29,7 +29,17 @@ def login():
 def auth():
     # ユーザ登録を行う
     # get param
+    req = request.json
+    user_type = req["user_type"]
+
     # バイナリが来るか，URL が来るかで変わる
+    if user_type == "student":
+        user = Student(
+            name=req["name"],
+            date_of_birth=req["date_of_birth"],
+            tel_number=req["tel_number"],
+            email=["email"],
+        )
     # TODO: ユーザ情報が全部載せ（テキスト，画像ファイル）で来る
     # TODO: 画像ファイルは AWS S3 にアップロードして URL を発行
     # TODO: 「登録完了した何か」を返す
@@ -45,44 +55,42 @@ def auth():
     })
 
 
-@app.route("/api/matching")
-def matching():
-    def get():
-        # http://hoge.com?key=value&key2=value2
-        # value = request.args['key']
-        # value2 = request.args['key2']  
-        # return jsonyfy({"user_id": "hoge"})
-        # 全てのマッチングを引っ張る
-        # TODO: speaker,listennerのIDを受け取る
-        # TODO: ユーザのマッチングを返す
-        # TODO: 「予定」と「終わった」マッチングを返す is_done_payment
-        
-        # TODO:所属返すのどうするか（必要機能か？）
-        mathches = Match.query.filter_by(
-            listener_id=current_user_id, is_done_meeting=False).all()
-        done_mathches = Match.query.filter_by(
-            listener_id=current_user_id, is_done_meeting=True).all()
-        return matches_schema.jsonify(matches+done_mathches)
+@app.route("/api/matching", methods=["GET"])
+def matches_list(): # マッチ履歴と予定
+    # http://hoge.com?key=value&key2=value2
+    # value = request.args['key']
+    # value2 = request.args['key2']  
+    # return jsonyfy({"user_id": "hoge"})
+    # 全てのマッチングを引っ張る
+    # TODO: speaker,listennerのIDを受け取る
+    # TODO: ユーザのマッチングを返す
+    # TODO: 「予定」と「終わった」マッチングを返す is_done_payment
+    
+    # TODO:所属返すのどうするか（必要機能か？）
+    mathches = Match.query.filter_by(
+        listener_id=current_user_id, is_done_meeting=False).all()
+    done_mathches = Match.query.filter_by(
+        listener_id=current_user_id, is_done_meeting=True).all()
+    return matches_schema.jsonify(matches+done_mathches)
 
         
 
 
 
-@app.route("/api/matching/apply")
-def matching():
-    def post():  # 重そう
-        speaker_id = request.json['speaker_id']
-        listener_id = request.json['listener_id']
-        apply_comment = request.json['apply_comment']
+@app.route("/api/matching/apply", methods=["GET"])
+def apply_match():  # 申し込み
+    speaker_id = request.json['speaker_id']
+    listener_id = request.json['listener_id']
+    apply_comment = request.json['apply_comment']
 
-        match = Match(speaker_id=speaker_id, listener_id=listener_id) # TODO:この書き方いいのか?
-        db.session.add(match)
-        db.session.commit()
-        # TODO: speaker ID, listener ID, 相談内容を受け取る
-        # TODO: メール送信する
+    match = Match(speaker_id=speaker_id, listener_id=listener_id) # TODO:この書き方いいのか?
+    db.session.add(match)
+    db.session.commit()
+    # TODO: speaker ID, listener ID, 相談内容を受け取る
+    # TODO: メール送信する
 
 
-@app.route("/api/matching/update")
+@app.route("/api/matching/update", methods=["POST"])
 def matching():
     def post():  # 重そう
         # TODO: match ID, 取得してis_matchedの更新
