@@ -1,24 +1,25 @@
-import React, { FormEvent } from "react";
+import React, { useState, FormEvent } from "react";
 
 import TextField from '@material-ui/core/TextField';
 import { green } from "@material-ui/core/colors";
 
 import AuthRequired from "components/AuthRequired";
 import { useQuery } from "libs/Url";
-import { getWorkerDetail } from "libs/ServerClient"
+import { getWorkerDetail, createNewMatching } from "libs/ServerClient"
 
 export default function Create() {
   const query = useQuery();
+  const [inquiry, setInquiry] = useState("");
   const workerId = query.get("worker");
   const worker = workerId ? getWorkerDetail(workerId) : null;
 
   const onSubmitButtonClicked = (e: FormEvent) => {
     e.preventDefault();
-
-    // workerId
-    // inquiry: 相談内容
+    if (workerId && inquiry) {
+      const createResult = createNewMatching(inquiry, workerId);
+      window.location.href = `/matching/${createResult.id}`
+    }
   };
-
 
   return (
     <AuthRequired>
@@ -42,12 +43,14 @@ export default function Create() {
                 id="outlined-required"
                 label="相談内容"
                 variant="outlined"
+                onChange={(event) => setInquiry(event.target.value)}
                 style={{ width: "100%" }}
               />
               <button
                 type="submit"
                 onClick={onSubmitButtonClicked}
                 style={{ margin: "10px 0", float: "right" }}
+                disabled={!(workerId && inquiry)}
               >
                 依頼する
               </button>

@@ -1,5 +1,7 @@
 import MatchingCreate from "./Create"
+import MatchingDetail from "./Detail"
 
 export {
-  MatchingCreate
+  MatchingCreate,
+  MatchingDetail,
 }
