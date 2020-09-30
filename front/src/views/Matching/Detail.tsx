@@ -3,6 +3,7 @@ import { green } from '@material-ui/core/colors';
 import { Link } from "react-router-dom";
 
 import AuthRequired from "components/AuthRequired";
+import Chat from "components/Chat";
 import { PaymentStatusSmall } from "components/PaymentStatus";
 import { useParams } from "libs/Url";
 import { commafy } from 'libs/Number';
@@ -37,11 +38,14 @@ export default function Detail() {
         {matching.payment.dueDate && <>支払期限: {convertDateTime(matching.payment.dueDate)} </>}
         {matching.payment.status === "pending" &&
           <Link
-            to="#"
+          to="#hoge"
           >
             支払いリンク
           </Link>
         }
+
+        <h3>メッセージ</h3>
+        <Chat roomId={matching.chatRoomId}/>
       </>
     </AuthRequired>
   );

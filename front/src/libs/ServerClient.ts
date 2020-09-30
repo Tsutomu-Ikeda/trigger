@@ -231,6 +231,7 @@ export const getMatchingDetail = (id: string) => {
     startDate: null as Date | null,
     endDate: null as Date | null,
     inquiry: "実際の待遇について聞きたい。",
+    chatRoomId: "8edc3069-d956-4a4d-a017-69e011e8d90e",
     listener: {
       id: "42d5a38e-fd54-4ee5-8944-86e7f74e8893",
     },
@@ -246,5 +247,44 @@ export const getMatchingDetail = (id: string) => {
       date: null as Date | null,
       dueDate: null as Date | null,
     },
+  };
+};
+
+export const getMessages = (roomId: string) => {
+  return [
+    {
+      id: "172c4f63-b3c7-4b27-bf72-54254d054b1f",
+      text: "はじめまして",
+      writer: "42d5a38e-fd54-4ee5-8944-86e7f74e8893",
+      dateSent: new Date("2020-08-23 14:25:30"),
+    },
+    {
+      id: "6c69334c-8126-4802-846d-1b17b2bebfa0",
+      text: "日程いつにしますか？",
+      writer: "42d5a38e-fd54-4ee5-8944-86e7f74e8893",
+      dateSent: new Date("2020-08-23 14:25:39"),
+    },
+    {
+      id: "6c69334c-8126-4802-846d-1b17b2bebfa0",
+      text:
+        "明日の夜はどうでしょうか？というのも私にも〇〇という都合があって、明後日以降は非常に忙しくなるんです。",
+      writer: "6924e1b2-b197-4fb6-bb78-22f904b801d4",
+      dateSent: new Date("2020-08-23 14:27:18"),
+    },
+    {
+      id: "be4c2674-08b0-4655-8a5b-7f7354ea0c32",
+      text: "良いですね",
+      writer: "42d5a38e-fd54-4ee5-8944-86e7f74e8893",
+      dateSent: new Date("2020-08-23 14:30:51"),
+    },
+  ];
+};
+
+export const sendMessage = (roomId: string, text: string) => {
+  return {
+    id: "be4c2674-08b0-4655-8a5b-7f7354ea0c32",
+    text,
+    writer: "42d5a38e-fd54-4ee5-8944-86e7f74e8893",
+    dateSent: new Date("2020-08-23 14:30:51"),
   };
 };
