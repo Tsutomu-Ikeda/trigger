@@ -1,14 +1,14 @@
-from sqlalchemy.dialects.mysql import INTEGER as Integer
-from sqlalchemy.dialects.mysql import TINYINT as Tinyint
-from sqlalchemy.dialects.mysql import TIMESTAMP as Timestamp
-from sqlalchemy.types import DateTime
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.dialects.mysql import INTEGER as Integer
+from sqlalchemy.dialects.mysql import TINYINT as Tinyint
+from sqlalchemy.dialects.mysql import TIMESTAMP as Timestamp
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.types import DateTime
+
 
 db = SQLAlchemy()
-Base = declarative_base()
 
 
 class Student(db.Model):
@@ -31,7 +31,7 @@ class Student(db.Model):
     created_at = db.Column(
         Timestamp, unique=False, nullable=False, default=datetime.utcnow
     )
-    cupdated_at = db.Column(
+    updated_at = db.Column(
         Timestamp, unique=False, nullable=False, default=datetime.utcnow
     )
 
@@ -59,7 +59,7 @@ class Worker(db.Model):
     created_at = db.Column(
         Timestamp, unique=False, nullable=False, default=datetime.now
     )
-    cupdated_at = db.Column(
+    updated_at = db.Column(
         Timestamp, unique=False, nullable=False, default=datetime.now
     )
     comment = db.Column(db.String(80), unique=False, nullable=True)
@@ -85,7 +85,7 @@ class Job(db.Model):
 
 class Match(db.Model):
     __tablename__ = "matches"
-    
+
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime, unique=False, nullable=True)
     speaker_id = db.Column(db.Integer, db.ForeignKey("workers.id"))
