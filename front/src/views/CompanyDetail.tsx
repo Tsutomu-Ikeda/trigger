@@ -10,70 +10,7 @@ import { green } from "@material-ui/core/colors";
 
 import AuthRequired from "components/AuthRequired";
 import { useParams } from "libs/Url";
-
-const getCompanyDetail = (id: string) => {
-  return {
-    name: "Hoge 株式会社",
-    id: id,
-    workersRegistered: 12,
-    workers: [{
-      id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-      jobName: "サーバーサイドエンジニア",
-      verified: false,
-      comment: "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-    }, {
-      id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-      jobName: "iOSエンジニア",
-      verified: true,
-      comment: "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-    }, {
-      id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-      jobName: "フロントエンドエンジニア",
-      verified: true,
-      comment: "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-    }, {
-      id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-      jobName: "インフラエンジニア",
-      verified: true,
-      comment: "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-    }, {
-      id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-      jobName: "研究開発職",
-      verified: false,
-      comment: "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-    }]
-  }
-};
-
-const getMoreWorkers = (comapnyId: string, offset: number) => {
-  return [{
-    id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-    jobName: "サーバーサイドエンジニア",
-    verified: false,
-    comment: "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-  }, {
-    id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-    jobName: "iOSエンジニア",
-    verified: true,
-    comment: "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-  }, {
-    id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-    jobName: "フロントエンドエンジニア",
-    verified: true,
-    comment: "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-  }, {
-    id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-    jobName: "インフラエンジニア",
-    verified: true,
-    comment: "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-  }, {
-    id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-    jobName: "研究開発職",
-    verified: false,
-    comment: "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-  }];
-}
-
+import { getCompanyDetail, getMoreWorkers } from "libs/ServerClient";
 
 function ListItemLink(props: any) {
   return <ListItem button component="a" {...props} />;
@@ -127,4 +64,4 @@ export default function Company() {
       </>
     </AuthRequired>
   );
-}
+};

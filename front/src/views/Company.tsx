@@ -13,6 +13,7 @@ import BusinessIcon from '@material-ui/icons/Business';
 
 import AuthRequired from "components/AuthRequired";
 import { useQuery, useHistory } from "libs/Url";
+import { searchCompany, searchMoreCompany } from "libs/ServerClient";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,51 +31,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-
-const searchCompany = (searchQuery: string) => {
-  const reversed = (word: string) => [...word.split("")].reduceRight((p, c) => p + c);
-
-  return {
-    numCompanies: 24,
-    companies: [
-      {
-        name: `${searchQuery} 株式会社`,
-        id: "98ccc4e5-e0b4-4fec-9767-145eec608bb2"
-      }, {
-        name: `株式会社 ${searchQuery}${searchQuery}`,
-        id: "7b699659-1e0d-41a1-8c73-d9e34d428acf"
-      }, {
-        name: `合名会社 ${searchQuery}★＆${searchQuery}☆`,
-        id: "c3a1dc79-caef-4bac-bef4-6a7be36fe75c"
-      }, {
-        name: `${searchQuery}は${searchQuery}を救う`,
-        id: "2e259fd1-b43d-4dbb-96ac-b8664cc26f23"
-      }, {
-        name: `${searchQuery}${reversed(searchQuery)}出版`,
-        id: "bd4828a5-e259-43ae-981a-23f53484f4b0"
-      }
-    ]
-  }
-};
-
-const searchMoreCompany = (searchQuery: string, offset: number) => {
-  return [{
-    name: `${searchQuery}スーパー${offset + 1}`,
-    id: "bd4828a5-e259-43ae-981a-23f53484f4b0"
-  }, {
-    name: `${searchQuery}スーパー${offset + 2}`,
-    id: "bd4828a5-e259-43ae-981a-23f53484f4b0"
-  }, {
-    name: `${searchQuery}スーパー${offset + 3}`,
-    id: "bd4828a5-e259-43ae-981a-23f53484f4b0"
-  }, {
-    name: `${searchQuery}スーパー${offset + 4}`,
-    id: "bd4828a5-e259-43ae-981a-23f53484f4b0"
-  }, {
-    name: `${searchQuery}スーパー${offset + 5}`,
-    id: "bd4828a5-e259-43ae-981a-23f53484f4b0"
-  }]
-}
 
 function ListItemLink(props: any) {
   return <ListItem button component="a" {...props} />;
@@ -165,4 +121,4 @@ export default function Company() {
       </>
     </AuthRequired>
   );
-}
+};

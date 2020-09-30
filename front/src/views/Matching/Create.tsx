@@ -5,16 +5,7 @@ import { green } from "@material-ui/core/colors";
 
 import AuthRequired from "components/AuthRequired";
 import { useQuery } from "libs/Url";
-
-const getWorkerDetail = (id: string) => {
-  return {
-    id,
-    jobName: "サーバーサイドエンジニア",
-    companyName: "Sansan株式会社",
-    verified: true,
-    comment: "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-  }
-};
+import { getWorkerDetail } from "libs/ServerClient"
 
 export default function Create() {
   const query = useQuery();

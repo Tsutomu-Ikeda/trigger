@@ -14,57 +14,9 @@ import DoneIcon from '@material-ui/icons/Done';
 import AuthRequired from "components/AuthRequired";
 import { convertDateTime, convertDurationDateTime } from 'libs/DateTime';
 import { commafy } from 'libs/Number';
+import { getUpcomingEvents, getRecentPayments, PaymentStatusType } from "libs/ServerClient";
 
-type PaymentStatus = "finished" | "pending" | "error";
-
-const upcomingEvents = [{
-  startDate: new Date("2020-09-26 12:00:00"),
-  endDate: new Date("2020-09-26 13:00:00"),
-  companyName: "Sansan株式会社",
-  matchingId: "4c2ce54d-5a53-46e9-ae8b-7ca4bacab6a5",
-  payment: {
-    status: "finished" as PaymentStatus,
-    amount: 1000,
-    date: new Date("2020-09-23 23:31:12"),
-    dueDate: null,
-  },
-}, {
-  startDate: new Date("2020-09-29 18:00:00"),
-  endDate: new Date("2020-09-29 19:00:00"),
-  matchingId: "0c853551-193d-437c-8b53-c266963d9102",
-  companyName: "ClipLine株式会社",
-  payment: {
-    status: "pending" as PaymentStatus,
-    amount: 1000,
-    date: null,
-    dueDate: new Date("2020-09-26 18:00:00"),
-  },
-}];
-
-const recentPayments = [{
-  date: new Date("2020-09-23 23:31:12"),
-  companyName: "Sansan株式会社",
-  matchingId: "4c2ce54d-5a53-46e9-ae8b-7ca4bacab6a5",
-  status: "finished" as PaymentStatus,
-  amount: 1000,
-  dueDate: null,
-}, {
-  date: new Date("2020-09-07 11:24:41"),
-  companyName: "ビズリーチ株式会社",
-  matchingId: "a8735832-c63b-4b9a-a050-a7309866af42",
-  status: "finished" as PaymentStatus,
-  amount: 1000,
-  dueDate: null,
-}, {
-  date: new Date("2020-08-23 14:25:30"),
-  companyName: "freee株式会社",
-  matchingId: "6b12fb3e-296f-4384-ba19-b15a7c7134fc",
-  status: "finished" as PaymentStatus,
-  amount: 1000,
-  dueDate: null,
-}];
-
-const PaymentStatus = ({ event }: { event: { payment: { status: PaymentStatus } } }) => {
+const PaymentStatus = ({ event }: { event: { payment: { status: PaymentStatusType } } }) => {
   const [tooltipIsOpen, setTooltipIsOpen] = useState(false);
 
   switch (event.payment.status) {
@@ -96,6 +48,9 @@ function ListItemLink(props: any) {
 }
 
 export default function Top() {
+  const recentPayments = getRecentPayments();
+  const upcomingEvents = getUpcomingEvents();
+
   return (
     <AuthRequired>
       <>
