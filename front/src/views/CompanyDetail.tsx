@@ -117,7 +117,13 @@ export default function Company() {
             </ListItemLink>)}
         </List>
         { company.workersRegistered > company.workers.length ?
-          <button onClick={onMoreWorkersClick}>もっと見る</button> : null}
+          <button
+            onClick={onMoreWorkersClick}
+            style={{ margin: "10px 0", float: "right" }}
+          >
+            もっと見る
+          </button>
+          : null}
       </>
     </AuthRequired>
   );

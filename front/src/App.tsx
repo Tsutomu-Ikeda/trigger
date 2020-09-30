@@ -15,6 +15,7 @@ import Company from "./views/Company";
 import CompanyDetail from "./views/CompanyDetail";
 import Top from "./views/Top";
 import SignIn from "./views/SignIn";
+import { MatchingCreate } from "./views/Matching";
 
 import { AppProvider } from "./store/store";
 
@@ -49,6 +50,9 @@ const routes = [{
   path: "/company/:id",
   component: CompanyDetail,
   exact: false,
+}, {
+  path: "/matching/create",
+  component: MatchingCreate,
   // }, {
   //   path: "/listen",
   //   component: Listen,

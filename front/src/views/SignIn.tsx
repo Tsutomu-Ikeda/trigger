@@ -25,7 +25,11 @@ export default function SignIn() {
         ログイン画面
      </Typography>
 
-      <button type="button" onClick={logIn}>
+      <button
+        type="button"
+        onClick={logIn}
+        style={{ margin: "10px 0", float: "right" }}
+      >
         ログイン
       </button>
     </div>

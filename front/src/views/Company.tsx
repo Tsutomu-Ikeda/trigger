@@ -59,19 +59,19 @@ const searchCompany = (searchQuery: string) => {
 
 const searchMoreCompany = (searchQuery: string, offset: number) => {
   return [{
-    name: `${searchQuery}スーパー${offset+1}`,
+    name: `${searchQuery}スーパー${offset + 1}`,
     id: "bd4828a5-e259-43ae-981a-23f53484f4b0"
   }, {
-    name: `${searchQuery}スーパー${offset+2}`,
+    name: `${searchQuery}スーパー${offset + 2}`,
     id: "bd4828a5-e259-43ae-981a-23f53484f4b0"
   }, {
-    name: `${searchQuery}スーパー${offset+3}`,
+    name: `${searchQuery}スーパー${offset + 3}`,
     id: "bd4828a5-e259-43ae-981a-23f53484f4b0"
   }, {
-    name: `${searchQuery}スーパー${offset+4}`,
+    name: `${searchQuery}スーパー${offset + 4}`,
     id: "bd4828a5-e259-43ae-981a-23f53484f4b0"
   }, {
-    name: `${searchQuery}スーパー${offset+5}`,
+    name: `${searchQuery}スーパー${offset + 5}`,
     id: "bd4828a5-e259-43ae-981a-23f53484f4b0"
   }]
 }
@@ -153,7 +153,13 @@ export default function Company() {
                 </ListItemLink>)}
             </List>
             { searchResult.numCompanies > searchResult.companies.length ?
-              <button onClick={onSearchMoreClick}>もっと見る</button> : null}
+              <button
+                onClick={onSearchMoreClick}
+                style={{ margin: "10px 0", float: "right" }}
+              >
+                もっと見る
+              </button>
+              : null}
           </>
           : null}
       </>
