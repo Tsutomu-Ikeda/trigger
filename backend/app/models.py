@@ -64,6 +64,10 @@ class Worker(db.Model):
     )
     comment = db.Column(db.String(80), unique=False, nullable=True)
 
+    def __init__(self, username, email):
+        self.username = username
+        self.email = email
+
 
 class University(db.Model):
     __tablename__ = "universities"
@@ -73,12 +77,14 @@ class University(db.Model):
 
 class Company(db.Model):
     __tablename__ = "companies"
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
 
 
 class Job(db.Model):
     __tablename__ = "jobs"
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
 
@@ -95,3 +101,21 @@ class Match(db.Model):
     is_matched = db.Column(db.Boolean, unique=False, nullable=True)
     is_done_meeting = db.Column(db.Boolean, unique=False, nullable=True, default=False)
     is_done_payment = db.Column(db.Boolean, unique=False, nullable=True, default=False)
+
+    def __init__(
+        self,
+        id,
+        name,
+        speaker_id,
+        listener_id,
+        is_matched,
+        is_done_meeting,
+        is_done_payment
+    ):
+        self.id = id
+        self.name = name
+        self.speaker_id = speaker_id
+        self.listener_id = listener_id
+        self.is_matched = is_matched
+        self.is_done_meeting = is_done_meeting
+        self.is_done_payment = is_done_payment
