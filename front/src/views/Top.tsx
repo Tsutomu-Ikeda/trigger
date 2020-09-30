@@ -11,9 +11,9 @@ import IconButton from '@material-ui/core/IconButton';
 import PaymentIcon from '@material-ui/icons/Payment';
 import DoneIcon from '@material-ui/icons/Done';
 
-import AuthRequired from "../components/AuthRequired";
-import { convertDateTime, convertDurationDateTime } from '../libs/DateTime';
-import { commafy } from '../libs/Number';
+import AuthRequired from "components/AuthRequired";
+import { convertDateTime, convertDurationDateTime } from 'libs/DateTime';
+import { commafy } from 'libs/Number';
 
 type PaymentStatus = "finished" | "pending" | "error";
 

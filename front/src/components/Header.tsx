@@ -19,10 +19,10 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import { useLocation } from "react-router-dom";
 
-import { store } from "../store/store";
+import { store } from "store/store";
 import {
   LogOut
-} from "../store/actions";
+} from "store/actions";
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
