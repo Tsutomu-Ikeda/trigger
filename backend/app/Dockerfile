@@ -24,3 +24,5 @@ RUN poetry config virtualenvs.create false \
     && poetry install
 
 COPY ./ ./
+
+ENV PYTHONPATH /app
