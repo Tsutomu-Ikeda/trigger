@@ -32,11 +32,30 @@ ReactDOM.render(
   // </React.StrictMode>
   document.getElementById('root')
 );
+function reorient() // After travelling in the history stack
+{
+    const positionLastShown = Number( // If none, then zero
+      sessionStorage.getItem( 'positionLastShown' ));
+    let position = window.history.state; // Absolute position in stack
+    if( position === null ) // Meaning a new entry on the stack
+    {
+        position = positionLastShown + 1; // Top of stack
 
-window.addEventListener('popstate', (e) => {
-  const newPath = window.location.href;
-  window.location.href = newPath;
-});
+        // (1) Stamp the entry with its own position in the stack
+        window.history.replaceState( position, /*no title*/'' );
+    }
+
+    // (2) Keep track of the last position shown
+    sessionStorage.setItem( 'positionLastShown', String(position) );
+
+    // (3) Discover the direction of travel by comparing the two
+    const direction = Math.sign( position - positionLastShown );
+    console.log( 'Travel direction is ' + direction );
+      // One of backward (-1), reload (0) or forward (1)
+}
+
+window.addEventListener( 'pageshow', reorient );
+window.addEventListener( 'popstate', reorient );
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

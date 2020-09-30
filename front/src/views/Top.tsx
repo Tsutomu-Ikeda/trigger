@@ -1,47 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import Typography from "@material-ui/core/Typography";
-import { green, red } from '@material-ui/core/colors';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-
-import PaymentIcon from '@material-ui/icons/Payment';
-import DoneIcon from '@material-ui/icons/Done';
 
 import AuthRequired from "components/AuthRequired";
+import PaymentStatus from "components/PaymentStatus";
 import { convertDateTime, convertDurationDateTime } from 'libs/DateTime';
 import { commafy } from 'libs/Number';
-import { getUpcomingEvents, getRecentPayments, PaymentStatusType } from "libs/ServerClient";
-
-const PaymentStatus = ({ event }: { event: { payment: { status: PaymentStatusType } } }) => {
-  const [tooltipIsOpen, setTooltipIsOpen] = useState(false);
-
-  switch (event.payment.status) {
-    case "finished":
-      return <Tooltip title="支払い済み"
-        open={tooltipIsOpen}
-        onOpen={() => setTooltipIsOpen(true)}
-        onClose={() => setTooltipIsOpen(false)}>
-        <IconButton edge="end" onClick={() => setTooltipIsOpen(!tooltipIsOpen)}>
-          <DoneIcon style={{ color: green[700] }} />
-        </IconButton>
-      </Tooltip>;
-    case "pending":
-      return <Tooltip title="未支払い"
-        open={tooltipIsOpen}
-        onOpen={() => setTooltipIsOpen(true)}
-        onClose={() => setTooltipIsOpen(false)}>
-        <IconButton edge="end" onClick={() => setTooltipIsOpen(!tooltipIsOpen)}>
-          <PaymentIcon style={{ color: red[700] }} />
-        </IconButton>
-      </Tooltip>;
-    default:
-      return null;
-  }
-};
+import { getUpcomingEvents, getRecentPayments } from "libs/ServerClient";
 
 function ListItemLink(props: any) {
   return <ListItem button component="a" {...props} />;
@@ -64,7 +32,7 @@ export default function Top() {
                 secondary={convertDurationDateTime(event.startDate, event.endDate)}
               />
               <ListItemSecondaryAction>
-                <PaymentStatus event={event} />
+                <PaymentStatus payment={event.payment} />
               </ListItemSecondaryAction>
             </ListItemLink>)}
         </List>

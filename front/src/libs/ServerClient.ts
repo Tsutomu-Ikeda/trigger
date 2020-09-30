@@ -1,5 +1,3 @@
-import { worker } from "cluster";
-
 export type PaymentStatusType = "finished" | "pending" | "error";
 
 export const searchCompany = (searchQuery: string) => {
@@ -223,6 +221,30 @@ export const createNewMatching = (inquiry: string, workerId: string) => {
       amount: 1000,
       date: null,
       dueDate: null,
+    },
+  };
+};
+
+export const getMatchingDetail = (id: string) => {
+  return {
+    id,
+    startDate: null as Date | null,
+    endDate: null as Date | null,
+    inquiry: "実際の待遇について聞きたい。",
+    listener: {
+      id: "42d5a38e-fd54-4ee5-8944-86e7f74e8893",
+    },
+    speaker: {
+      id: "6924e1b2-b197-4fb6-bb78-22f904b801d4",
+      companyName: "ClipLine株式会社",
+      jobName: "サーバーサイドエンジニア",
+      verified: true,
+    },
+    payment: {
+      status: "pending" as PaymentStatusType,
+      amount: 1000,
+      date: null as Date | null,
+      dueDate: null as Date | null,
     },
   };
 };
