@@ -1,8 +1,9 @@
 import os
 
 from flask import Flask
+from flask_migrate import Migrate
 
-from database import init_db
+from models import db
 
 
 def create_app():
@@ -14,10 +15,9 @@ def create_app():
     )
     app.config["SQLALCHEMY_ECHO"] = bool(os.getenv("SQLALCHEMY_ECHO"))
 
-    import models
-
-    # init DB
-    init_db(app)
+    # DB config
+    db.init_app(app)  # DB と Flask の接続部分
+    migrate = Migrate(app, db)
 
     return app
 

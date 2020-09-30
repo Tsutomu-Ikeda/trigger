@@ -52,7 +52,8 @@ $ flask db migrate
 - モデル（`models.py`）の更新を反映
 
 ```sh
-$ flask db upgrade
+$ flask db migrate  # field の変更を検知
+$ flask db upgrade  # 更新
 ```
 
 ### DB の操作
