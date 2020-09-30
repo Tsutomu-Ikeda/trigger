@@ -2,3 +2,5 @@
 
 !app/
 !nginx/
+!db/mysql/conf.d
+!db/mysql/init.d

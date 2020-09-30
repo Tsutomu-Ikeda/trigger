@@ -1,9 +1,17 @@
 from flask import Flask
+
+from database import init_db
+
+
 app = Flask(__name__)
 
-@app.route('/api')
-def hello_world():
-    return 'Hello, World!'
 
-if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=8080)
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object("config.Config")
+    init_db(app)
+
+    return app
+
+
+app = create_app()
