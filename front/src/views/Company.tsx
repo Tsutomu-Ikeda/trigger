@@ -12,7 +12,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import BusinessIcon from '@material-ui/icons/Business';
 
 import AuthRequired from "../components/AuthRequired";
-import { useQuery } from "../components/Url";
+import { useQuery, useHistory } from "../libs/Url";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -84,7 +84,7 @@ export default function Company() {
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResult, setSearchResult] = useState({ numCompanies: null, companies: [] } as { numCompanies: number | null, companies: { name: string; id: string }[] })
   const classes = useStyles();
-  const history = window.history;
+  const history = useHistory();
   const query = useQuery();
 
   const onSearchButtonClicked = (e: FormEvent) => {

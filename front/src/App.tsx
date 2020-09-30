@@ -12,6 +12,7 @@ import {
 
 import NotFound from "./views/NotFound";
 import Company from "./views/Company";
+import CompanyDetail from "./views/CompanyDetail";
 import Top from "./views/Top";
 import SignIn from "./views/SignIn";
 
@@ -32,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
     minHeight: "calc(100vh - 132px)",
     backgroundColor: theme.palette.background.paper,
   },
+  footer: {
+    padding: theme.spacing(2),
+    height: 80,
+  },
 }));
 
 const routes = [{
@@ -40,6 +45,10 @@ const routes = [{
 }, {
   path: "/company/search",
   component: Company,
+}, {
+  path: "/company/:id",
+  component: CompanyDetail,
+  exact: false,
   // }, {
   //   path: "/listen",
   //   component: Listen,
@@ -57,7 +66,7 @@ export default function App() {
         <CssBaseline />
         <Router>
           <Header />
-          <Container maxWidth="md" style={{marginTop: "20px"}}>
+          <Container maxWidth="md" style={{ marginTop: "20px" }}>
             <div className={classes.app}>
               <main className={classes.main}>
                 <Switch>
@@ -65,7 +74,7 @@ export default function App() {
                     <Redirect to="." />
                   </Route>
                   {routes.map((item) => (
-                    <Route path={item.path} component={item.component} key={item.path} exact />
+                    <Route path={item.path} component={item.component} key={item.path} exact={item.exact || true} />
                   ))}
                   <Route>
                     <NotFound />
@@ -75,6 +84,8 @@ export default function App() {
             </div>
           </Container>
         </Router>
+        <footer className={classes.footer}>
+        </footer>
       </React.Fragment>
     </AppProvider >
   );
