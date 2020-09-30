@@ -18,8 +18,9 @@ def create_app():
     # DB config
     db.init_app(app)  # DB と Flask の接続部分
     migrate = Migrate(app, db)
+    app_db = db
 
-    return app
+    return app, app_db
 
 
-app = create_app()
+app, app_db = create_app()
