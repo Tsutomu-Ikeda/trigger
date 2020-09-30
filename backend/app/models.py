@@ -39,7 +39,7 @@ class Student(Base):
     )
 
 
-class Workers(db.Model):
+class Workers(Base):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
     date_of_birth = db.Column(db.DateTime, unique=False, nullable=False)
@@ -75,16 +75,16 @@ class Workers(db.Model):
     )
 
 
-class Universities(db.Model):
+class Universities(Base):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
 
 
-class Companies(db.Model):
+class Companies(Base):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
 
 
-class Jobs(db.Model):
+class Jobs(Base):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
