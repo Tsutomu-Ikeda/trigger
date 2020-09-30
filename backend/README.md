@@ -20,13 +20,14 @@ $ docker-compose up
 
 ### マイグレーション
 
-参考：[Flask-Migrateに関して自分の言葉で(Qiita, 2019/06)](https://qiita.com/KI1208/items/2581ed6f211a2d73e5fd)
+参考：[Flask-Migrate に関して自分の言葉で(Qiita, 2019/06)](https://qiita.com/KI1208/items/2581ed6f211a2d73e5fd)
 
 #### DB 初期化時
 
 DB 初期化時（または DB の設定を全部リセットしたくなった時の最終手段として）実行するコマンド
 
 - 処理内容
+  - まず，flask のシェルに入ってテーブルの作成
   - `migrations` ディレクトリの作成
   - マイグレーション用スクリプトの生成
 
@@ -35,6 +36,9 @@ $ docker-compose exec app bash
 
 # コンテナ内
 # migrations ディレクトリがあれば，"rm -rf migrations"
+$ flask shell
+>>> from database import db
+>>> db.create_all()  # DB コンテナに入るとテーブルが確認できる
 $ flask db init
 $ flask db migrate
 ```
@@ -61,9 +65,9 @@ $ docker compose up -d  # 起動中の場合，実行しなくて良い
 $ docker-compose exec app bash
 
 # db コンテナ内
-$ FLASK_APP=run.py flask shell
-mysql> show databases;  # SQL が実行できる
-mysql> show tables;  # SQL が実行できる
+$ flask shell
+>>> from models import Worker
+...
 ```
 
 #### MySQL のコンソールで直接 DB を操作
@@ -77,7 +81,8 @@ $ docker-compose exec db mysql -uroot -proot
 # db コンテナ内
 $ mysql -uroot -proot
 mysql> show databases;  # SQL が実行できる
-mysql> show tables;  # SQL が実行できる
+mysql> show tables;
+...
 ```
 
 ---
