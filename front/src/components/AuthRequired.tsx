@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 
 import { useLocation } from "react-router-dom";
 
-import { store } from "../store/store";
+import { store } from "store/store";
 
 const AuthRequired = ({ children }: { children: JSX.Element }) => {
   const { state } = useContext(store);

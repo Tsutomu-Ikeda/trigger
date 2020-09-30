@@ -1,6 +1,6 @@
 import React from "react";
 
-import AuthRequired from "../components/AuthRequired";
+import AuthRequired from "components/AuthRequired";
 
 export default function NotFound() {
   return (

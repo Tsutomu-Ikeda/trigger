@@ -11,8 +11,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import BusinessIcon from '@material-ui/icons/Business';
 
-import AuthRequired from "../components/AuthRequired";
-import { useQuery, useHistory } from "../libs/Url";
+import AuthRequired from "components/AuthRequired";
+import { useQuery, useHistory } from "libs/Url";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

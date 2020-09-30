@@ -8,8 +8,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import PersonIcon from '@material-ui/icons/Person';
 import { green } from "@material-ui/core/colors";
 
-import AuthRequired from "../components/AuthRequired";
-import { useParams } from "../libs/Url";
+import AuthRequired from "components/AuthRequired";
+import { useParams } from "libs/Url";
 
 const getCompanyDetail = (id: string) => {
   return {
