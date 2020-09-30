@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 724492699818
+Revision ID: beb605960301
 Revises: 
-Create Date: 2020-09-30 17:29:45.064857
+Create Date: 2020-09-30 19:23:32.153673
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
-revision = '724492699818'
+revision = 'beb605960301'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -47,7 +47,7 @@ def upgrade():
     sa.Column('type_card_url', sa.String(length=120), nullable=True),
     sa.Column('identity_card_url', sa.String(length=120), nullable=True),
     sa.Column('created_at', mysql.TIMESTAMP(), nullable=False),
-    sa.Column('cupdated_at', mysql.TIMESTAMP(), nullable=False),
+    sa.Column('updated_at', mysql.TIMESTAMP(), nullable=False),
     sa.ForeignKeyConstraint(['affiliation_id'], ['universities.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('certificate_url'),
@@ -73,7 +73,7 @@ def upgrade():
     sa.Column('type_card_url', sa.String(length=120), nullable=True),
     sa.Column('identity_card_url', sa.String(length=120), nullable=True),
     sa.Column('created_at', mysql.TIMESTAMP(), nullable=False),
-    sa.Column('cupdated_at', mysql.TIMESTAMP(), nullable=False),
+    sa.Column('updated_at', mysql.TIMESTAMP(), nullable=False),
     sa.Column('comment', sa.String(length=80), nullable=True),
     sa.ForeignKeyConstraint(['affiliation_id'], ['companies.id'], ),
     sa.ForeignKeyConstraint(['job'], ['jobs.id'], ),

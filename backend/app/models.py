@@ -11,23 +11,26 @@ from sqlalchemy.types import DateTime
 db = SQLAlchemy()
 
 
-class Student(db.Model):
-    __tablename__ = "students"
+class User(db.Model):
+    __abstract__ = True  # this model should not be created in the database
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
     date_of_birth = db.Column(db.DateTime, unique=False, nullable=False)
     tel_number = db.Column(db.String(11), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    passowrd = db.Column(db.String(120), unique=False, nullable=False)
-    certificate_url = db.Column(db.String(120), unique=True, nullable=False)  # 照明
+    password_hash = db.Column(db.String(120), unique=False, nullable=False)
     user_type = db.Column(db.String(20), unique=False, nullable=False)
-    affiliation_id = db.Column(db.Integer, db.ForeignKey("universities.id"))
-    is_authenticated = db.Column(
-        db.Boolean, unique=False, nullable=False, default=False
-    )
+
+    # 本人確認関連：オペーレータがチェックする
+    # FIXME: URL じゃなくて UUID が送られてくるかもしれない
     type_card_url = db.Column(db.String(120), unique=True, nullable=True)
     identity_card_url = db.Column(db.String(120), unique=True, nullable=True)
+    is_authenticated = db.Column(
+        db.Boolean, unique=False, nullable=False, default=False
+    )  # オペレータがチェックしたら「認証済みユーザ」となる
+
+    # その他
     created_at = db.Column(
         Timestamp, unique=False, nullable=False, default=datetime.utcnow
     )
@@ -36,32 +39,19 @@ class Student(db.Model):
     )
 
 
-class Worker(db.Model):
+class Student(User):
+    __tablename__ = "students"
+
+    affiliation_id = db.Column(db.Integer, db.ForeignKey("universities.id"))
+
+
+class Worker(User):
     __tablename__ = "workers"
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=False, nullable=False)
-    date_of_birth = db.Column(db.Date, unique=False, nullable=False)
-    tel_number = db.Column(db.String(11), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    passowrd = db.Column(db.String(120), unique=False, nullable=False)
-    certificate_url = db.Column(db.String(120), unique=True, nullable=False)  # 照明
-    user_type = db.Column(db.String(20), unique=False, nullable=False)
     affiliation_id = db.Column(db.Integer, db.ForeignKey("companies.id"))
-    job = db.Column(db.Integer, db.ForeignKey("jobs.id"))
     department = db.Column(db.String(120), unique=False, nullable=True)
-    postions = db.Column(db.String(120), unique=False, nullable=True)
-    is_authenticated = db.Column(
-        db.Boolean, unique=False, nullable=False, default=False
-    )
-    type_card_url = db.Column(db.String(120), unique=True, nullable=True)
-    identity_card_url = db.Column(db.String(120), unique=True, nullable=True)
-    created_at = db.Column(
-        Timestamp, unique=False, nullable=False, default=datetime.now
-    )
-    updated_at = db.Column(
-        Timestamp, unique=False, nullable=False, default=datetime.now
-    )
+    position = db.Column(db.String(120), unique=False, nullable=True)
+    job = db.Column(db.Integer, db.ForeignKey("jobs.id"))
     comment = db.Column(db.String(80), unique=False, nullable=True)
 
     def __init__(self, username, email):
@@ -71,6 +61,7 @@ class Worker(db.Model):
 
 class University(db.Model):
     __tablename__ = "universities"
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
 
@@ -110,7 +101,7 @@ class Match(db.Model):
         listener_id,
         is_matched,
         is_done_meeting,
-        is_done_payment
+        is_done_payment,
     ):
         self.id = id
         self.name = name
