@@ -39,7 +39,8 @@ $ docker-compose exec app bash
 $ flask shell
 >>> from database import db
 >>> db.create_all()  # DB コンテナに入るとテーブルが確認できる
-$ flask db init
+>>> exit
+$ flask db init  # テーブル作成後，マイグレーションの設定
 $ flask db migrate
 ```
 

@@ -5,5 +5,5 @@ db = SQLAlchemy()
 
 
 def init_db(app):
-    db.init_app(app)
+    db.init_app(app)  # DB と Flask の接続部分
     Migrate(app, db)
