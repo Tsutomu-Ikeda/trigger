@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
@@ -7,8 +8,12 @@ from sqlalchemy.dialects.mysql import TIMESTAMP as Timestamp
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.types import DateTime
 
+from database import TestSQLAlchemy
 
-db = SQLAlchemy()
+
+# ほんとは上手く分離できるはずだけど時間ないから仕方ない（本来ここにテストかどうかを書くべきでない）
+is_test = bool(os.getenv("IS_TEST"))
+db = SQLAlchemy() if not is_test else TestSQLAlchemy()
 
 
 class User(db.Model):
