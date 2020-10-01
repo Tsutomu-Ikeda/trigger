@@ -13,6 +13,7 @@ from models import (
     Worker,
 )
 from sqlalchemy import exc
+from _datetime import date
 
 
 UNIVERSITIES_MOCK = [
