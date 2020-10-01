@@ -6,6 +6,8 @@ services:
       - app
     ports:
       - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx
   app:
     build: ./app
     depends_on:
