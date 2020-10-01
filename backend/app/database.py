@@ -1,9 +1,12 @@
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-
-db = SQLAlchemy()
+from flask_sqlalchemy import orm, SignallingSession, SQLAlchemy
 
 
-def init_db(app):
-    db.init_app(app)
-    Migrate(app, db)
+class TestSignallingSession(SignallingSession):
+    def commit(self):
+        self.flush()  # セッションが保持しているデータをすべてデータベースに書き込む
+        self.expire_all()  # セッションが保持してるデータをクリアしデータベースより読むこむようにする
+
+
+class TestSQLAlchemy(SQLAlchemy):
+    def create_session(self, options):
+        return orm.sessionmaker(class_=TestSignallingSession, db=self, **options)

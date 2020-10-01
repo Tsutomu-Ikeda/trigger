@@ -11,9 +11,18 @@ RUN set -ex \
     && pip install -U --no-cache-dir poetry \
     && rm -rf /var/lib/apt/lists/*
 
+# for ER diagram
+# eralchemy -i $DB_URL -o buttyake-ER-diagram.pdf
+RUN set -ex \
+    && apt update \
+    && apt install -y graphviz libgraphviz-dev \
+    && pip install eralchemy
+
 # install Python packages
 COPY poetry.lock pyproject.toml ./
 RUN poetry config virtualenvs.create false \
-    && poetry install --no-dev
+    && poetry install
 
 COPY ./ ./
+
+ENV PYTHONPATH /app

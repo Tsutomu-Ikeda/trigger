@@ -1,0 +1,274 @@
+=========================
+===== /api/register =====
+=========================
+{
+  "is_authenticated": false, 
+  "is_logined": false, 
+  "message": "ユーザ登録に失敗しました．同じ Email アドレスが既に登録されています．", 
+  "user_id": ""
+}
+
+
+=========================
+===== /api/register =====
+=========================
+{
+  "is_authenticated": false, 
+  "is_logined": false, 
+  "message": "ユーザ登録に失敗しました．同じ Email アドレスが既に登録されています．", 
+  "user_id": ""
+}
+
+
+=========================
+===== /api/login ========
+=========================
+{
+  "message": "ログインに成功しました", 
+  "user_id": "7bc06cda-3a92-4300-9c1e-a7353b1db5a1", 
+  "user_type": "student"
+}
+==========================
+===== /api/logout ========
+==========================
+{
+  "message": "ログアウトしました"
+}
+=========================
+===== /api/login ========
+=========================
+{
+  "message": "ログインに成功しました", 
+  "user_id": "57c4e455-314a-46ea-9f42-90f1b69cc4f0", 
+  "user_type": "student"
+}
+
+
+=========================
+===== /api/matching =====
+=========================
+{
+  "done_mathes": [], 
+  "will_matches": [
+    {
+      "id": "022818c2-8a6d-4572-896d-aa38bb2fd575", 
+      "is_done_meeting": false, 
+      "is_done_payment": false, 
+      "is_matched": true, 
+      "listener_id": "57c4e455-314a-46ea-9f42-90f1b69cc4f0", 
+      "speaker_id": "a0334571-4583-4f4a-99dd-7bf8fb608685"
+    }, 
+    {
+      "id": "ca2aa9c0-2e62-4869-9c69-e44733b62869", 
+      "is_done_meeting": false, 
+      "is_done_payment": false, 
+      "is_matched": false, 
+      "listener_id": "57c4e455-314a-46ea-9f42-90f1b69cc4f0", 
+      "speaker_id": "26d7ddf5-7e81-4b79-b2eb-a14b11bc3548"
+    }
+  ]
+}
+
+
+===============================
+===== /api/matching/apply =====
+===============================
+{
+  "message": "マッチングの申し込みが完了しました"
+}
+
+
+================================
+===== /api/matching/update =====
+================================
+{
+  "message": "マッチングを更新しました"
+}
+
+
+================================
+===== /api/matching/update =====
+================================
+{
+  "message": "マッチングを更新しました"
+}
+
+
+===============================
+===== /api/company/search =====
+===============================
+{
+  "companies": [
+    {
+      "id": "cfe7725d-7e0a-4e27-96c8-60e00f251e4c", 
+      "name": "SanSan"
+    }
+  ], 
+  "num_companies": 1, 
+  "query": "Sansan"
+}
+
+
+==============================
+===== /api/company/<id> ======
+==============================
+{
+  "company_id": "81b2f690-4c1e-4460-b105-f55c04fd91c3", 
+  "company_name": "Sansan 株式会社", 
+  "num_workers": 17, 
+  "workers": [
+    {
+      "comment": "就活だけでなく日々の悩みもお聞かせください", 
+      "id": "0e1687b1-d45a-40d0-af04-1a77a0296536", 
+      "is_authenticated": false, 
+      "job": {
+        "id": "ebe611cd-c5c2-433d-9ec2-53ed2a890995", 
+        "name": "Web エンジニア"
+      }
+    }, 
+    {
+      "comment": "就活だけでなく日々の悩みもお聞かせください", 
+      "id": "1f6d2ed9-4caf-419e-8495-6a8275cc5d8f", 
+      "is_authenticated": false, 
+      "job": {
+        "id": "4d52d284-87d3-4427-b568-2adc45368e98", 
+        "name": "iOS エンジニア"
+      }
+    }, 
+    {
+      "comment": "就活のことならお任せください", 
+      "id": "3613353b-9cb6-4c85-9c52-3f5f976b364e", 
+      "is_authenticated": true, 
+      "job": {
+        "id": "6a493fdb-6863-49d4-a037-21d0b32f2d38", 
+        "name": "フロントエンドエンジニア"
+      }
+    }, 
+    {
+      "comment": "就活だけでなく日々の悩みもお聞かせください", 
+      "id": "5aa35e6b-4e45-4801-b0d6-35f8229fe35b", 
+      "is_authenticated": true, 
+      "job": {
+        "id": "4d52d284-87d3-4427-b568-2adc45368e98", 
+        "name": "iOS エンジニア"
+      }
+    }, 
+    {
+      "comment": "SIer -> Web 業界のように違う業界を見てきているので，それらに関して何かお役に立てるかもしれません", 
+      "id": "60d3b5a1-2d8a-4507-83d1-d15aeff6e4ce", 
+      "is_authenticated": true, 
+      "job": {
+        "id": "84e28eb1-0f7a-4527-ba57-76ec0ea05a84", 
+        "name": "サーバーサイドエンジニア"
+      }
+    }, 
+    {
+      "comment": "がんばります", 
+      "id": "66df3cdb-6436-4c77-be31-58625b5bda21", 
+      "is_authenticated": false, 
+      "job": {
+        "id": "6a493fdb-6863-49d4-a037-21d0b32f2d38", 
+        "name": "フロントエンドエンジニア"
+      }
+    }, 
+    {
+      "comment": "就活のことならお任せください", 
+      "id": "716ed27a-7867-4505-b941-6cab47cdf77d", 
+      "is_authenticated": true, 
+      "job": {
+        "id": "84e28eb1-0f7a-4527-ba57-76ec0ea05a84", 
+        "name": "サーバーサイドエンジニア"
+      }
+    }, 
+    {
+      "comment": "がんばります", 
+      "id": "7ed4cd15-dc8c-4de9-be1e-2349e2e64e78", 
+      "is_authenticated": false, 
+      "job": {
+        "id": "b600600e-84f8-423d-8c73-ff565af3ffad", 
+        "name": "研究開発職"
+      }
+    }, 
+    {
+      "comment": "就活だけでなく日々の悩みもお聞かせください", 
+      "id": "8822c772-a719-400d-b588-08cba3acf3a3", 
+      "is_authenticated": true, 
+      "job": {
+        "id": "b600600e-84f8-423d-8c73-ff565af3ffad", 
+        "name": "研究開発職"
+      }
+    }, 
+    {
+      "comment": "就活だけでなく日々の悩みもお聞かせください", 
+      "id": "9de37896-290f-46ed-b52c-0acb96382f47", 
+      "is_authenticated": true, 
+      "job": {
+        "id": "84e28eb1-0f7a-4527-ba57-76ec0ea05a84", 
+        "name": "サーバーサイドエンジニア"
+      }
+    }, 
+    {
+      "comment": "SIer -> Web 業界のように違う業界を見てきているので，それらに関して何かお役に立てるかもしれません", 
+      "id": "a8876758-5f3f-4bd3-be2e-a99b7c1537f1", 
+      "is_authenticated": true, 
+      "job": {
+        "id": "66eb98a2-2b04-4fef-9111-bb7f0e6c36d8", 
+        "name": "インフラエンジニア"
+      }
+    }, 
+    {
+      "comment": "就活のことならお任せください", 
+      "id": "af46b13f-bd61-41ea-970e-aa9107e69b2b", 
+      "is_authenticated": false, 
+      "job": {
+        "id": "66eb98a2-2b04-4fef-9111-bb7f0e6c36d8", 
+        "name": "インフラエンジニア"
+      }
+    }, 
+    {
+      "comment": "就活だけでなく日々の悩みもお聞かせください", 
+      "id": "b8e3e385-5ae1-45aa-a2d4-535d7ebcfe9c", 
+      "is_authenticated": true, 
+      "job": {
+        "id": "6a493fdb-6863-49d4-a037-21d0b32f2d38", 
+        "name": "フロントエンドエンジニア"
+      }
+    }, 
+    {
+      "comment": "就活のことならお任せください", 
+      "id": "c0bc052b-15f7-41e1-b2a5-8b2eee45535d", 
+      "is_authenticated": false, 
+      "job": {
+        "id": "6a493fdb-6863-49d4-a037-21d0b32f2d38", 
+        "name": "フロントエンドエンジニア"
+      }
+    }, 
+    {
+      "comment": "がんばります", 
+      "id": "f0f1e1c1-567f-413c-bb0e-7f88dbad315d", 
+      "is_authenticated": true, 
+      "job": {
+        "id": "ebe611cd-c5c2-433d-9ec2-53ed2a890995", 
+        "name": "Web エンジニア"
+      }
+    }, 
+    {
+      "comment": "がんばります", 
+      "id": "f3aee4d7-a1f0-4e4f-b21e-134b2ff83f08", 
+      "is_authenticated": true, 
+      "job": {
+        "id": "ebe611cd-c5c2-433d-9ec2-53ed2a890995", 
+        "name": "Web エンジニア"
+      }
+    }, 
+    {
+      "comment": "SIer -> Web 業界のように違う業界を見てきているので，それらに関して何かお役に立てるかもしれません", 
+      "id": "ff6270f4-63cc-4e31-8f5e-3119c1b11dc2", 
+      "is_authenticated": false, 
+      "job": {
+        "id": "4d52d284-87d3-4427-b568-2adc45368e98", 
+        "name": "iOS エンジニア"
+      }
+    }
+  ]
+}
