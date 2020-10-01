@@ -1,6 +1,7 @@
 import random
 import string
 from datetime import date, datetime
+import comps
 
 from models import (
     db,
@@ -34,6 +35,7 @@ COMPANIES_MOCK = [
     {"name": "SanSan"},
     {"name": "SANSAN Inc."},
     {"name": "合同会社 SANsan"},
+    *comps.companies
 ]
 JOBS_MOCK = [
     {"name": "サーバーサイドエンジニア"},
@@ -189,7 +191,7 @@ job_ids = [job.id for job in jobs]
 universities = University.query.all()
 university_ids = [univ.id for univ in universities]
 comapnies = Company.query.all()
-company_ids = [co.id for co in companies]
+company_ids = [co.id for co in companies][:10]
 
 # student, workers モデルの生成
 students_mock = generate_students(university_ids)
