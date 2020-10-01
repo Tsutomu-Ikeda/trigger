@@ -1,5 +1,11 @@
 export type PaymentStatusType = "finished" | "pending" | "error";
 
+export const signIn = async (email: string, password: string) => {
+  return {
+    id: "6924e1b2-b197-4fb6-bb78-22f904b801d4",
+  }
+};
+
 export const searchCompany = (searchQuery: string) => {
   const reversed = (word: string) =>
     [...word.split("")].reduceRight((p, c) => p + c);
@@ -280,7 +286,7 @@ export const getMessages = (roomId: string) => {
   ];
 };
 
-export const sendMessage = (roomId: string, text: string) => {
+export const sendMessage = async (roomId: string, text: string) => {
   return {
     id: "be4c2674-08b0-4655-8a5b-7f7354ea0c32",
     text,
