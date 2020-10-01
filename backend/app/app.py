@@ -15,6 +15,7 @@ def create_app():
     )
     app.config["SQLALCHEMY_ECHO"] = bool(os.getenv("SQLALCHEMY_ECHO"))
     app.secret_key = os.getenv("SESSION_SECRET_KEY")
+    app.config["JSON_AS_ASCII"] = False  # utf8 対応
 
     # DB config
     db.init_app(app)  # DB と Flask の接続部分
