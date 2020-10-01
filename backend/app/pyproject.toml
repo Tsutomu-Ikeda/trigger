@@ -16,6 +16,7 @@ flask_marshmallow = "^0.14.0"
 jinja2 = "^2.11.2"
 marshmallow-sqlalchemy = "^0.23.1"
 python = "^3.8"
+boto3 = "^1.15.9"
 
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"
