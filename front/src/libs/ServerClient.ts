@@ -2,8 +2,8 @@ export type PaymentStatusType = "finished" | "pending" | "error";
 
 export const signIn = async (email: string, password: string) => {
   return {
-    id: "6924e1b2-b197-4fb6-bb78-22f904b801d4",
-  }
+    id: "42d5a38e-fd54-4ee5-8944-86e7f74e8893",
+  };
 };
 
 export const searchCompany = (searchQuery: string) => {
@@ -290,7 +290,10 @@ export const sendMessage = async (roomId: string, text: string) => {
   return {
     id: "be4c2674-08b0-4655-8a5b-7f7354ea0c32",
     text,
-    writer: "42d5a38e-fd54-4ee5-8944-86e7f74e8893",
+    writer: ((value: string | null) =>
+      (value && (JSON.parse(value).user.id)) || "")(
+      localStorage.getItem("state")
+    ) as string,
     dateSent: new Date("2020-08-23 14:30:51"),
   };
 };
