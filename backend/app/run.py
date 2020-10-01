@@ -1,7 +1,8 @@
 import os
 from datetime import datetime
 
-from flask import jsonify, request, session
+from functools import wraps
+from flask import abort, jsonify, request, session
 from flasgger import swag_from, Swagger
 
 from app import app
@@ -32,6 +33,15 @@ from utils import check_password_hash, generate_password_hash
 if not bool(os.getenv("IS_TEST")):
     # テスト環境では表示しない
     swagger = Swagger(app)
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get("user_id"):
+            abort(401)
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 @app.route("/api/healthcheck", methods=["GET"])
@@ -132,7 +142,7 @@ def login():
 
     if (not student) and (not worker):
         # Email が DB に存在しない
-        return {"is_logined": False, "id": "", "user_type": "", "message": "ユーザが存在しません"}
+        return {"is_logined": False, "id": "", "user_type": "", "message": "ユーザが存在しません"}, 401
     else:
         user = student if student else worker
         # パスワードのチェック
@@ -153,7 +163,7 @@ def login():
             response = jsonify(
                 {"user_id": "", "user_type": "", "message": "パスワードが間違っています"}
             )
-            return response
+            return response, 401
 
 
 @app.route("/api/logout", methods=["GET"])
@@ -163,6 +173,7 @@ def logout():
 
 
 @app.route("/api/matching", methods=["GET"])
+@login_required
 def matches_list():  # マッチ履歴と予定
     # 「予定」と「終わった」マッチングを返す is_done_payment
 
@@ -186,12 +197,13 @@ def matches_list():  # マッチ履歴と予定
 
 
 @app.route("/api/matching/apply", methods=["POST"])
+@login_required
 def apply_match():
     # 面談申し込み
     # listener 学生
     # speaker 社会人
     speaker_id = request.json["speaker_id"]
-    listener_id = request.json["listener_id"]
+    listener_id = session.get("user_id")
     apply_comment = request.json["apply_comment"]
 
     match = Match(
@@ -206,10 +218,11 @@ def apply_match():
     db.session.commit()
     # TODO: メール送信する
 
-    return {"message": "マッチングの申し込みが完了しました"}
+    return {"message": "マッチングの申し込みが完了しました", "id": match.id}
 
 
 @app.route("/api/matching/update", methods=["POST"])
+@login_required
 def matching():
     # マッチング状況の更新
     match_id = request.json["match_id"]
@@ -227,10 +240,11 @@ def matching():
 
 
 @app.route("/api/company/search", methods=["GET"])
+@login_required
 def search_companies():
     # 会社検索のエンドポイント
     query = request.args["q"]
-    company_models = Company.query.filter(Company.name.ilike(query)).all()
+    company_models = Company.query.filter(Company.name.ilike(f"%{query}%")).all()
 
     response = companies_schema.jsonify(company_models)
     company_list = response.json
@@ -242,6 +256,7 @@ def search_companies():
 
 
 @app.route("/api/company/<company_id>", methods=["GET"])
+@login_required
 def company(company_id):
     # 特定の会社の相談者を全て表示する
     company = Company.query.get(company_id)
@@ -257,6 +272,25 @@ def company(company_id):
             "workers": worker_list,
         }
     )
+
+
+@app.route("/api/worker/<worker_id>", methods=["GET"])
+@login_required
+def get_worker(worker_id):
+    # 特定の会社の相談者を全て表示する
+    worker = Worker.query.get(worker_id)
+
+    return jsonify({
+        "id": worker.id,
+        "job": {
+            "name": worker.job.name,
+        },
+        "company": {
+            "name": worker.company.name,
+        },
+        "comment": worker.comment,
+        "is_authenticated": worker.is_authenticated,
+    })
 
 
 ###########################
