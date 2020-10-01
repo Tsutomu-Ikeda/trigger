@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 from flask import jsonify, request, session
 from flasgger import swag_from, Swagger
@@ -42,14 +43,16 @@ def healthchek():
 @swag_from("swagger/register.yml")
 def register():
     # ユーザ登録
-    # extract body
+    # extract user data
     req = request.json
     email = req["email"]
     password_hash = generate_password_hash(req["password"])
-    affiliation_name = req["affiliation"]  # 文字列が送られてくることを想定
+    affiliation_id = req["affiliation_id"]  # 文字列が送られてくることを想定
+    affiliation_name = req["affiliation_name"]
+
     user_dict = {
         "name": req["name"],
-        "date_of_birth": req["date_of_birth"],
+        "date_of_birth": datetime.strptime(req["date_of_birth"], "%Y/%m/%d"),
         "tel_number": req["tel_number"],
         "email": req["email"],
         "password_hash": password_hash,
@@ -78,12 +81,12 @@ def register():
     if user_dict["user_type"] == "student":
         # TODO: University はあらかじめ DB 側に固定されてユーザが登録側で選択できる想定
         # TODO: DB に入れておく必要がある
-        university = University.query.filter_by(name=affiliation_name).first()
+        university = University.query.get(affiliation_id)
         user_dict.update({"affiliation_id": university.id})
         user = Student(**user_dict)
     else:
         # Company はユーザが入力する部分．テーブルに無ければ作成する
-        company = Company.query.filter_by(name=affiliation_name).first()
+        company = Company.query.filter_by(id=affiliation_id).first()
         if not company:
             # Company を新規作成
             company = Company(name=affiliation_name)
@@ -91,7 +94,7 @@ def register():
 
         worker_dict = {
             "affiliation_id": company.id,
-            "job_id": req["job"],
+            "job_id": req["job_id"],
             "department": req["department"],
             "position": req["position"],
             "comment": req["comment"],
@@ -123,17 +126,34 @@ def login():
     email = request.json["email"]
     password = request.json["password"]
 
-    user = User.query.filter(User.email == email).first()
+    # FIXME 本当は Student と Worker 両方使わずに User のみで検索したい
+    student = Student.query.filter_by(email=email).first()
+    worker = Worker.query.filter_by(email=email).first()
 
-    if not user:
-        # ユーザが存在しない
-        return {"is_logined": False, "id": "", "user_type": ""}
+    if (not student) and (not worker):
+        # Email が DB に存在しない
+        return {"is_logined": False, "id": "", "user_type": "", "message": "ユーザが存在しません"}
     else:
-        is_logined = check_password_hash(user, password)
-        response = jsonify({"user_id": user.id, "user_type": user.user_type})
-        response.set_cookie(key="user_id", value=user.id, expires=None)
-
-        return response
+        user = student if student else worker
+        # パスワードのチェック
+        if check_password_hash(user, password):
+            # ログイン成功
+            response = jsonify(
+                {
+                    "user_id": user.id,
+                    "user_type": user.user_type,
+                    "message": "ログインに成功しました",
+                }
+            )
+            response.set_cookie(key="user_id", value=user.id)
+            session["user_id"] = user.id
+            return response
+        else:
+            # ログイン失敗
+            response = jsonify(
+                {"user_id": "", "user_type": "", "message": "パスワードが間違っています"}
+            )
+            return response
 
 
 @app.route("/api/logout", methods=["GET"])
@@ -147,7 +167,6 @@ def matches_list():  # マッチ履歴と予定
     # 「予定」と「終わった」マッチングを返す is_done_payment
 
     # TODO:所属返すのどうするか（必要機能か？）
-
     user_id = session["user_id"]
     will_matches = Match.query.filter_by(
         listener_id=user_id, is_done_meeting=False
@@ -155,9 +174,15 @@ def matches_list():  # マッチ履歴と予定
     done_matches = Match.query.filter_by(
         listener_id=user_id, is_done_meeting=True
     ).all()
-    return matches_schema.jsonify(
-        {"will_matches": will_matches, "done_matches": done_matches}
-    )
+
+    response_will = matches_schema.jsonify(will_matches)
+    response_done = matches_schema.jsonify(done_matches)
+    will_list = response_will.json
+    done_list = response_done.json
+
+    return jsonify({"will_matches": will_list, "done_mathes": done_list})
+    # return workers_schema.jsonify(will_matches, "done_matches": workers_schema.jsonify(done_matches)}
+    # return workers_schema.jsonify(will_matches, done_matches)
 
 
 @app.route("/api/matching/apply", methods=["POST"])
@@ -181,6 +206,8 @@ def apply_match():
     db.session.commit()
     # TODO: メール送信する
 
+    return {"message": "マッチングの申し込みが完了しました"}
+
 
 @app.route("/api/matching/update", methods=["POST"])
 def matching():
@@ -194,31 +221,40 @@ def matching():
     Match.query.filter_by(id=match_id).update(
         {Match.is_matched: is_matched, Match.is_done_meeting: is_done_meeting}
     )
+    # TODO: メール送信する
+
+    return {"message": "マッチングを更新しました"}
 
 
 @app.route("/api/company/search", methods=["GET"])
 def search_companies():
     # 会社検索のエンドポイント
     query = request.args["q"]
-    companies = Company.query.filter(Company.name.ilike(query)).all()
+    company_models = Company.query.filter(Company.name.ilike(query)).all()
 
-    return companies_schema.jsonify(
-        {"query": query, "num_companies": len(companies), "companies": companies}
-    )
+    response = companies_schema.jsonify(company_models)
+    company_list = response.json
+    return {
+        "query": query,
+        "num_companies": len(company_list),
+        "companies": company_list,
+    }
 
 
 @app.route("/api/company/<company_id>", methods=["GET"])
 def company(company_id):
     # 特定の会社の相談者を全て表示する
     company = Company.query.get(company_id)
-    workers = Worker.query.filter_by(affiliation_id=company_id).all()
+    worker_models = Worker.query.filter_by(affiliation_id=company_id).all()
 
-    return workers_schema.jsonify(
+    response = workers_schema.jsonify(worker_models)
+    worker_list = response.json
+    return jsonify(
         {
             "company_id": company_id,
             "company_name": company.name,
-            "num_workers": len(workers),
-            "workers": workers,
+            "num_workers": len(worker_list),
+            "workers": worker_list,
         }
     )
 
