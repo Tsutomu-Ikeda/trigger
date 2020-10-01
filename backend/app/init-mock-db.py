@@ -37,7 +37,7 @@ COMPANIES_MOCK = [
 ]
 JOBS_MOCK = [
     {"name": "サーバーサイドエンジニア"},
-    {"name": "フロントエンド エンジニア"},
+    {"name": "フロントエンドエンジニア"},
     {"name": "Web エンジニア"},
     {"name": "iOS エンジニア"},
     {"name": "インフラエンジニア"},
@@ -55,12 +55,12 @@ def generate_phone_number():
     return "".join(random.choices(string.digits, k=11))
 
 
-def insert_mock(Model, mock_data: list):
+def generate_models(Model, mock_data: list):
     models = [Model(**mock) for mock in mock_data]
-    db.session.add_all(models)
+    return models
 
 
-def generate_students():
+def generate_students(univertiy_ids):
     """100 人分の学生モック
     - 念のため ADMIN も用意
     """
@@ -77,7 +77,7 @@ def generate_students():
             "user_type": "student",
             "type_card_url": generate_random_name(50),  # FIXME: S3 上の一意なファイル名になるかも
             "identity_card_url": generate_random_name(50),  # FIXME: S3 上の一意なファイル名になるかも
-            "affiliation_id": random.randint(1, len(UNIVERSITIES_MOCK)),
+            "affiliation_id": random.choice(univertiy_ids),
         }
     ]
 
@@ -91,7 +91,7 @@ def generate_students():
             "user_type": "student",
             "type_card_url": generate_random_name(50),  # FIXME: S3 上の一意なファイル名になるかも
             "identity_card_url": generate_random_name(50),  # FIXME: S3 上の一意なファイル名になるかも
-            "affiliation_id": random.randint(1, len(UNIVERSITIES_MOCK)),
+            "affiliation_id": random.choice(univertiy_ids),
         }
         for _ in range(NUM_MOCK)
     ]
@@ -99,7 +99,7 @@ def generate_students():
     return students
 
 
-def generate_workers():
+def generate_workers(company_ids, job_ids):
     """100 人分の社会人モック
     - 念のため ADMIN も用意
     """
@@ -118,7 +118,7 @@ def generate_workers():
             "name": "admin",
             "date_of_birth": date_of_birth,
             "tel_number": generate_phone_number(),
-            "email": "yskbsk13@gmail.com",
+            "email": "pytwbf201830@gmail.com",
             "password_hash": "password",
             "user_type": "worker",
             "is_authenticated": True,
@@ -126,11 +126,11 @@ def generate_workers():
             + generate_random_name(50),  # FIXME: S3 上の一意なファイル名になるかも
             "identity_card_url": "IMG-"
             + generate_random_name(50),  # FIXME: S3 上の一意なファイル名になるかも
-            "affiliation_id": random.randint(1, len(COMPANIES_MOCK)),
             "department": random.choice(["Sansan 事業部", "Eight 事業部"]),
             "position": random.choice(["PM", "テッククリード", "エンジニア"]),
-            "job_id": random.randint(1, len(JOBS_MOCK)),
             "comment": random.choice(comments_mock),
+            "affiliation_id": random.choice(company_ids),
+            "job_id": random.choice(job_ids),
         }
     ]
 
@@ -147,11 +147,11 @@ def generate_workers():
             + generate_random_name(50),  # FIXME: S3 上の一意なファイル名になるかも
             "identity_card_url": "IMG-"
             + generate_random_name(50),  # FIXME: S3 上の一意なファイル名になるかも
-            "affiliation_id": random.randint(1, len(COMPANIES_MOCK)),
             "department": random.choice(["Sansan 事業部", "Eight 事業部", "DSOC"]),
             "position": random.choice(["PM", "シニア hoge", "テッククリード", "エンジニア"]),
-            "job_id": random.randint(1, len(JOBS_MOCK)),
             "comment": random.choice(comments_mock),
+            "affiliation_id": random.choice(company_ids),
+            "job_id": random.choice(job_ids),
         }
         for _ in range(NUM_MOCK)
     ]
@@ -159,36 +159,53 @@ def generate_workers():
     return workers
 
 
-def generate_matches():
+def generate_matches(listener_ids, speaker_ids):
     matches = []
     matches += [
         {
             "date": datetime(2020, 10, 1, 10, 00),
-            "speaker_id": (random.getrandbits(1)) + 1,
-            "listener_id": (random.getrandbits(1)) + 1,
+            "speaker_id": random.choice(speaker_ids),
+            "listener_id": random.choice(listener_ids),
             # "meeting_length": 60,
             "is_matched": bool(random.getrandbits(1)),
             "is_done_meeting": bool(random.getrandbits(1)),
             "is_done_payment": bool(random.getrandbits(1)),
         }
-        for _ in range(NUM_MOCK)
+        for i in range(NUM_MOCK)
     ]
     return matches
 
 
-# 外部キーなし
-insert_mock(University, UNIVERSITIES_MOCK)
-insert_mock(Job, JOBS_MOCK)
-insert_mock(Company, COMPANIES_MOCK)
+# universities, jobs, companies モデルの生成
+universities = generate_models(University, UNIVERSITIES_MOCK)
+jobs = generate_models(Job, JOBS_MOCK)
+companies = generate_models(Company, COMPANIES_MOCK)
+db.session().add_all(universities)
+db.session().add_all(jobs)
+db.session().add_all(companies)
+
+jobs = Job.query.all()
+job_ids = [job.id for job in jobs]
+universities = University.query.all()
+university_ids = [univ.id for univ in universities]
+comapnies = Company.query.all()
+company_ids = [co.id for co in companies]
+
+# student, workers モデルの生成
+students_mock = generate_students(university_ids)
+student_models = generate_models(Student, students_mock)
+workers_mock = generate_workers(company_ids, job_ids)
+worker_models = generate_models(Worker, workers_mock)
+db.session().add_all(student_models)
+db.session().add_all(worker_models)
 db.session.commit()
 
-# 外部キーあり
-students_mock = generate_students()
-insert_mock(Student, students_mock)
-workers_mock = generate_workers()
-insert_mock(Worker, workers_mock)
-db.session.commit()
-
-matches_mock = generate_matches()
-insert_mock(Match, matches_mock)
+# matches モデルの生成
+listeners = Student.query.all()
+listener_ids = [listener.id for listener in listeners]
+speakers = Worker.query.all()
+speaker_ids = [speaker.id for speaker in speakers]
+matches_mock = generate_matches(listener_ids, speaker_ids)
+match_models = generate_models(Match, matches_mock)
+db.session().add_all(match_models)
 db.session.commit()
