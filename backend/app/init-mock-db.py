@@ -1,6 +1,6 @@
 import random
 import string
-from datetime import date
+from datetime import date, datetime
 
 from models import (
     db,
@@ -61,7 +61,7 @@ def insert_mock(Model, mock_data: list):
 
 
 def generate_students():
-    """ 100 人分の学生モック
+    """100 人分の学生モック
     - 念のため ADMIN も用意
     """
 
@@ -100,7 +100,7 @@ def generate_students():
 
 
 def generate_workers():
-    """ 100 人分の社会人モック
+    """100 人分の社会人モック
     - 念のため ADMIN も用意
     """
 
@@ -159,6 +159,23 @@ def generate_workers():
     return workers
 
 
+def generate_matches():
+    matches = []
+    matches += [
+        {
+            "date": datetime(2020, 10, 1, 10, 00),
+            "speaker_id": (random.getrandbits(1)) + 1,
+            "listener_id": (random.getrandbits(1)) + 1,
+            # "meeting_length": 60,
+            "is_matched": bool(random.getrandbits(1)),
+            "is_done_meeting": bool(random.getrandbits(1)),
+            "is_done_payment": bool(random.getrandbits(1)),
+        }
+        for _ in range(NUM_MOCK)
+    ]
+    return matches
+
+
 # 外部キーなし
 insert_mock(University, UNIVERSITIES_MOCK)
 insert_mock(Job, JOBS_MOCK)
@@ -170,4 +187,8 @@ students_mock = generate_students()
 insert_mock(Student, students_mock)
 workers_mock = generate_workers()
 insert_mock(Worker, workers_mock)
+db.session.commit()
+
+matches_mock = generate_matches()
+insert_mock(Match, matches_mock)
 db.session.commit()
