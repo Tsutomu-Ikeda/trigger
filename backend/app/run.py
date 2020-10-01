@@ -1,6 +1,6 @@
 import os
 
-from flask import request, jsonify
+from flask import jsonify, request, session
 from flasgger import swag_from, Swagger
 
 from app import app
@@ -103,10 +103,7 @@ def register():
     db.session.commit()
 
     # 認証周りの話
-    # FIXME: レスポンスヘッダに Cookie 載せる？
-    # - その前に Cookie をテーブルで管理しないといけない
-
-    return jsonify(
+    response = jsonify(
         {
             "is_logined": True,  # ログインは OK
             "user_id": user.id,
@@ -114,6 +111,9 @@ def register():
             "message": "ユーザ登録に成功しました",
         }
     )
+    response.set_cookie(key="user_id", value=user.id, expires=None)
+
+    return response
 
 
 @app.route("/api/login", methods=["POST"])
@@ -129,12 +129,19 @@ def login():
         # ユーザが存在しない
         return {"is_logined": False, "id": "", "user_type": ""}
     else:
-        # TODO: ハッシュ値の比較
         is_logined = check_password_hash(user, password)
-        # FIXME: レスポンスヘッダに Cookie 載せる？
-        return jsonify(
-            {"is_logined": is_logined, "id": user.id, "user_type": user.user_type}
+        response = jsonify(
+            {"is_logined": is_logined, "user_id": user.id, "user_type": user.user_type}
         )
+        response.set_cookie(key="user_id", value=user.id, expires=None)
+
+        return response
+
+
+@app.route("/api/logout", methods=["GET"])
+def logout():
+    session.clear()
+    return {"message": "ログアウトしました"}
 
 
 @app.route("/api/matching", methods=["GET"])
@@ -171,34 +178,24 @@ def apply_match():  # 申し込み
     # TODO: メール送信する
 
 
-# @app.route("/api/matching/<string:type>", methods=["POST"])
-# def matching(type):
-#     if type == "apply":
-#         # マッチング申し込み
-#         # TODO: Match レコードの作成
-#         pass
-#     elif type == "ok":
-#         # マッチング確定
-#         # TODO: is_matched を True にする
-#         pass
-#     elif type == "decide":
-#         # 日程を確定
-#         pass
-#     elif type == "update":
-#         # マッチングの日程を変更
-#         pass
-#     elif type == "done":
-#         # ミーティング終了
-#         pass
+@app.route("/api/matching/update", methods=["POST"])
+def matching(type):
+    # 1. Match レコードの作成
+    # TODO: 2. マッチング確定
+    # TODO: is_matched を True にする
+    # TODO: マッチング ID と日程が POST される
+    # TODO: 確定した日程等の情報をメールで送信
+    # TODO: 3. ミーティング終了
+    # TODO: ミーティングの情報が送信されてくる
+    # TODO: is_done_meeting を True にする
+    pass
 
 
 @app.route("/api/company/search", methods=["GET"])
 def search_companies():
     # 会社検索のエンドポイント
-    # extract query
     company_name = request.args["q"]
     companies = Company.query.filter(Company.name.ilike(company_name)).all()
-    # 名寄せしたいね
 
     return companies_schema.jsonify(companies)
 
@@ -215,6 +212,8 @@ def company(company_id):
 # TODO: DM（マッチング前の調整）のやりとり
 # TODO: DM & 音声（マッチング）
 ###########################
+
+
 @app.route("/api/call")
 def hoge():
     def get():
@@ -227,6 +226,8 @@ def hoge():
 ###########################
 # 金融 Stripe の決済基盤
 ###########################
+
+
 @app.route("/api/payment", methods=["POST"])
 def payment():
     # matching ID を受け取って完了にする
