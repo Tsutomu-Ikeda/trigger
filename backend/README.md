@@ -141,7 +141,30 @@ None
 - request
 
 ```json
-{}
+{
+  "name": "ぶっちゃけ　たろう",
+  "email": "buttyake@example.com",
+  "date_of_barth": "2020,10,2,10,00",
+  "tel_number": "00000000",
+  "password": "password",
+  "user_type": "worker",
+  "affilication_id": "UUID",
+  "affilication_name": "デジハリ大学",
+  "type_card_url": "buttyake.type.s3",
+  "identity_card_url": "buttyake.id.s3",
+  "is_authenticated": 0
+}
+```
+
+- response
+
+```json
+{
+  "is_logined": true, // true | false
+  "user_id": "UUID",
+  "is_authenticated": false, // 本人確認等が終わってないので「認証ユーザ」ではない
+  "message": "ユーザ登録に失敗しました．同じ Email アドレスが既に登録されています．"
+}
 ```
 
 ### /login
