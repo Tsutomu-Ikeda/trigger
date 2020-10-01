@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 1e27a66869d6
+Revision ID: 3b9dd0fbd75d
 Revises: 
-Create Date: 2020-10-01 08:57:02.164190
+Create Date: 2020-10-01 13:56:02.248925
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
-revision = '1e27a66869d6'
+revision = '3b9dd0fbd75d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -37,7 +37,7 @@ def upgrade():
     op.create_table('students',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=80), nullable=False),
-    sa.Column('date_of_birth', sa.DateTime(), nullable=False),
+    sa.Column('date_of_birth', sa.Date(), nullable=False),
     sa.Column('tel_number', sa.String(length=11), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('password_hash', sa.String(length=120), nullable=False),
@@ -58,7 +58,7 @@ def upgrade():
     op.create_table('workers',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=80), nullable=False),
-    sa.Column('date_of_birth', sa.DateTime(), nullable=False),
+    sa.Column('date_of_birth', sa.Date(), nullable=False),
     sa.Column('tel_number', sa.String(length=11), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('password_hash', sa.String(length=120), nullable=False),
@@ -71,10 +71,10 @@ def upgrade():
     sa.Column('affiliation_id', sa.Integer(), nullable=True),
     sa.Column('department', sa.String(length=120), nullable=True),
     sa.Column('position', sa.String(length=120), nullable=True),
-    sa.Column('job', sa.Integer(), nullable=True),
+    sa.Column('job_id', sa.Integer(), nullable=True),
     sa.Column('comment', sa.String(length=80), nullable=True),
     sa.ForeignKeyConstraint(['affiliation_id'], ['companies.id'], ),
-    sa.ForeignKeyConstraint(['job'], ['jobs.id'], ),
+    sa.ForeignKeyConstraint(['job_id'], ['jobs.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('identity_card_url'),
@@ -91,6 +91,8 @@ def upgrade():
     sa.Column('is_matched', sa.Boolean(), nullable=True),
     sa.Column('is_done_meeting', sa.Boolean(), nullable=True),
     sa.Column('is_done_payment', sa.Boolean(), nullable=True),
+    sa.Column('created_at', mysql.TIMESTAMP(), nullable=False),
+    sa.Column('updated_at', mysql.TIMESTAMP(), nullable=False),
     sa.ForeignKeyConstraint(['listener_id'], ['students.id'], ),
     sa.ForeignKeyConstraint(['speaker_id'], ['workers.id'], ),
     sa.PrimaryKeyConstraint('id'),

@@ -45,7 +45,7 @@ class TestRegister:
         payload = {
             "name": "okuwaki",
             "date_of_birth": "20210331",
-            # "date_of_birth": date(2021, 3, 31),
+            "date_of_birth": date(2021, 3, 31).strftime("%Y%m%d"),
             "tel_number": "08012345678",
             "email": "yskbsk13@gmail.com",
             "password": "password",
@@ -64,4 +64,36 @@ class TestRegister:
 
     def test_register_worker(self):
         pass
+
+
+class TestLogin:
+    """ ユーザ登録のテスト """
+
+    PATH = "/register"
+    URL = API_ROOT + PATH
+
+    # def test_register_student(self):
+    #     method = "POST"
+    #     payload = {
+    #         "name": "okuwaki",
+    #         "date_of_birth": "20210331",
+    #         # "date_of_birth": date(2021, 3, 31),
+    #         "tel_number": "08012345678",
+    #         "email": "yskbsk13@gmail.com",
+    #         "password": "password",
+    #         "user_type": "student",
+    #         "type_card_url": "hoge.s3-aws.com",  # FIXME: S3 上の一意なファイル名になるかも
+    #         "identity_card_url": "hogehoge.s3-aws.com",  # FIXME: S3 上の一意なファイル名になるかも
+    #         "affiliation": "B 大学",
+    #     }
+    #     headers = {"Content-Type": "application/json"}
+
+    #     # 1 回目のリクエスト：登録成功
+    #     res_success = requests.post(url=self.URL, json=payload, headers=headers)
+    #     res_json = res_success.json()
+    #     print(res_json["message"])
+    #     assert res_json["is_logined"] == True
+
+    # def test_register_worker(self):
+    #     pass
 

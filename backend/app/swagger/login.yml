@@ -1,0 +1,25 @@
+ログイン用のエンドポイント
+---
+parameters:
+  - name: email
+    in: body
+    type: string
+    required: true
+  - name: password
+    in: body
+    type: string
+    required: true
+responses:
+  200:
+    description: ログイン成功 / 失敗の情報
+    schema:
+      type: object
+      properties:
+        is_logined:
+          type: boolean
+        id:
+          type: integer
+        is_authenticated:
+          type: boolean
+        user_type:
+          type: string
