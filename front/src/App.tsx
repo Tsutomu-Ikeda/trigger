@@ -15,7 +15,7 @@ import Company from "./views/Company";
 import CompanyDetail from "./views/CompanyDetail";
 import Top from "./views/Top";
 import SignIn from "./views/SignIn";
-import { MatchingCreate, MatchingDetail } from "./views/Matching";
+import { MatchingCall, MatchingCreate, MatchingDetail  } from "./views/Matching";
 
 import { AppProvider } from "./store/store";
 
@@ -56,6 +56,10 @@ const routes = [{
 }, {
   path: "/matching/:id",
   component: MatchingDetail,
+  exact: false,
+}, {
+  path: "/matching/:id/call",
+  component: MatchingCall,
   exact: false,
   // }, {
   //   path: "/listen",

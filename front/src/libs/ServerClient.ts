@@ -2,7 +2,8 @@ export type PaymentStatusType = "finished" | "pending" | "error";
 
 export const signIn = async (email: string, password: string) => {
   return {
-    id: "42d5a38e-fd54-4ee5-8944-86e7f74e8893",
+    // id: "42d5a38e-fd54-4ee5-8944-86e7f74e8893",
+    id: "6924e1b2-b197-4fb6-bb78-22f904b801d4",
   };
 };
 
@@ -232,6 +233,30 @@ export const createNewMatching = (inquiry: string, workerId: string) => {
 };
 
 export const getMatchingDetail = (id: string) => {
+  if (id === "4c2ce54d-5a53-46e9-ae8b-7ca4bacab6a5") {
+    return {
+      id,
+      startDate: new Date("2020-09-26 12:00:00"),
+      endDate: new Date("2020-09-26 13:00:00"),
+      inquiry: "Triggerついて聞きたい。",
+      chatRoomId: "0a8de6ee-18b5-4975-a861-9dfee516dc1e",
+      listener: {
+        id: "42d5a38e-fd54-4ee5-8944-86e7f74e8893",
+      },
+      speaker: {
+        id: "6924e1b2-b197-4fb6-bb78-22f904b801d4",
+        companyName: "Sansan株式会社",
+        jobName: "サーバーサイドエンジニア",
+        verified: true,
+      },
+      payment: {
+        status: "finished" as PaymentStatusType,
+        amount: 1000,
+        date: null as Date | null,
+        dueDate: null as Date | null,
+      },
+    };
+  }
   return {
     id,
     startDate: null as Date | null,
@@ -257,6 +282,34 @@ export const getMatchingDetail = (id: string) => {
 };
 
 export const getMessages = (roomId: string) => {
+  if (roomId === "0a8de6ee-18b5-4975-a861-9dfee516dc1e") {
+    return [
+      {
+        id: "172c4f63-b3c7-4b27-bf72-54254d054b1f",
+        text: "はじめまして",
+        writer: "42d5a38e-fd54-4ee5-8944-86e7f74e8893",
+        dateSent: new Date("2020-08-23 14:25:30"),
+      },
+      {
+        id: "6c69334c-8126-4802-846d-1b17b2bebfa0",
+        text: "はじめまして",
+        writer: "6924e1b2-b197-4fb6-bb78-22f904b801d4",
+        dateSent: new Date("2020-08-23 14:27:18"),
+      },
+      {
+        id: "be4c2674-08b0-4655-8a5b-7f7354ea0c32",
+        text: "日程は9/26 12:00 - 13:00でどうでしょうか",
+        writer: "42d5a38e-fd54-4ee5-8944-86e7f74e8893",
+        dateSent: new Date("2020-08-23 14:30:51"),
+      },
+      {
+        id: "6c69334c-8126-4802-846d-1b17b2bebfa0",
+        text: "良いですね。よろしくお願いします。",
+        writer: "6924e1b2-b197-4fb6-bb78-22f904b801d4",
+        dateSent: new Date("2020-08-23 14:27:18"),
+      },
+    ];
+  }
   return [
     {
       id: "172c4f63-b3c7-4b27-bf72-54254d054b1f",
@@ -291,7 +344,7 @@ export const sendMessage = async (roomId: string, text: string) => {
     id: "be4c2674-08b0-4655-8a5b-7f7354ea0c32",
     text,
     writer: ((value: string | null) =>
-      (value && (JSON.parse(value).user.id)) || "")(
+      (value && JSON.parse(value).user.id) || "")(
       localStorage.getItem("state")
     ) as string,
     dateSent: new Date("2020-08-23 14:30:51"),
