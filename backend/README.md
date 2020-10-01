@@ -141,9 +141,7 @@ None
 - request
 
 ```json
-{
-
-}
+{}
 ```
 
 ### /login
@@ -163,7 +161,7 @@ Email アドレスとパスワードを受け取り，ユーザ ID を返す．
 ```json
 {
   "email": "buttyake@sample.com", // string
-  "password": "buttyake-password"  // int
+  "password": "buttyake-password" // int
 }
 ```
 
@@ -171,8 +169,8 @@ Email アドレスとパスワードを受け取り，ユーザ ID を返す．
 
 ```json
 {
-  "user_id": "550e8400-e29b-41d4-a716-446655440000",  // UUID: string
-  "user_type": "student" | "worker"  // string
+  "user_id": "550e8400-e29b-41d4-a716-446655440000", // UUID: string
+  "user_type": "student" | "worker" // string
 }
 ```
 
@@ -191,7 +189,7 @@ Email アドレスとパスワードを受け取り，ユーザ ID を返す．
 
 ```json
 {
-  "message": "ログアウトしました"  // string
+  "message": "ログアウトしました" // string
 }
 ```
 
@@ -211,6 +209,7 @@ None
 - response
 
 ```json
+
 ```
 
 #### POST
@@ -229,9 +228,9 @@ None
 
 ```json
 {
-  "seapker_id": "UUID",  // 相談役のユーザ ID
-  "listener_id": "UUID",  // 相談者のユーザ ID
-  "apply_comment" : "就活の闇を包み隠さず教えてください",  // 相談者が申請時に入力するコメント
+  "seapker_id": "UUID", // 相談役のユーザ ID
+  "listener_id": "UUID", // 相談者のユーザ ID
+  "apply_comment": "就活の闇を包み隠さず教えてください" // 相談者が申請時に入力するコメント
 }
 ```
 
@@ -333,6 +332,7 @@ None
         "comment": "インフラを始めてから早 10 年",
       }
     },
+    ...
   ]
 }
 ```
@@ -340,7 +340,6 @@ None
 ##### POST
 
 None
-
 
 ### /call
 
