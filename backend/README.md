@@ -30,14 +30,12 @@ $ docker-compose up
 $ docker-compose exec app bash
 # 以下，app コンテナ内
 $ rm -rf migrations
-$ flask db init
-$ flask db migrate
-$ flask db upgrade
+$ sh init-db.sh  # flask db init -> flask db migrate -> flask db upgrade
 
 # 3. DB へのモックデータの挿入
 $ flask shell
 # 以下，ipython
-In [1]: %run init-mockdb.py
+In [1]: %run init-mock-db.py
 ```
 
 ## DB 関連
@@ -87,7 +85,7 @@ $ flask db upgrade  # 更新
 `app` コンテナに入る．
 
 ```sh
-$ docker compose up -d  # 起動中の場合，実行しなくて良い
+$ docker compose up  # 起動中の場合，実行しなくて良い
 $ docker-compose exec app bash
 
 # db コンテナ内
@@ -101,11 +99,10 @@ $ flask shell
 `db` コンテナに入る．
 
 ```sh
-$ docker compose up -d  # 起動中の場合，実行しなくて良い
-$ docker-compose exec db mysql -uroot -proot
+$ docker compose up  # 起動中の場合，実行しなくて良い
+$ docker-compose exec db mysql -uroot -ppassword
 
 # db コンテナ内
-$ mysql -uroot -proot
 mysql> show databases;  # SQL が実行できる
 mysql> show tables;
 ...
