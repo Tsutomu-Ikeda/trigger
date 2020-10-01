@@ -141,7 +141,30 @@ None
 - request
 
 ```json
-{}
+{
+  "name": "ぶっちゃけ　たろう",
+  "email": "buttyake@example.com",
+  "date_of_barth": "2020,10,2,10,00",
+  "tel_number": "00000000",
+  "password": "password",
+  "user_type": "worker",
+  "affilication_id": "UUID",
+  "affilication_name": "デジハリ大学",
+  "type_card_url": "buttyake.type.s3",
+  "identity_card_url": "buttyake.id.s3",
+  "is_authenticated": 0
+}
+```
+
+- response
+
+```json
+{
+  "is_logined": true, // true | false
+  "user_id": "UUID",
+  "is_authenticated": false, // 本人確認等が終わってないので「認証ユーザ」ではない
+  "message": "ユーザ登録に失敗しました．同じ Email アドレスが既に登録されています．"
+}
 ```
 
 ### /login
@@ -170,7 +193,8 @@ Email アドレスとパスワードを受け取り，ユーザ ID を返す．
 ```json
 {
   "user_id": "550e8400-e29b-41d4-a716-446655440000", // UUID: string
-  "user_type": "student" | "worker" // string
+  "user_type": "student" | "worker", // string
+  "message": "ログインに成功しました" // string
 }
 ```
 
@@ -234,6 +258,14 @@ None
 }
 ```
 
+- response
+
+```json
+{
+  "message": "マッチングの申し込みが完了しました" // string
+}
+```
+
 #### /matching/update
 
 マッチングの内容を更新する．
@@ -256,7 +288,11 @@ None
 
 - response
 
-None
+```json
+{
+  "message": "マッチングを更新しました" // string
+}
+```
 
 ### /company
 
