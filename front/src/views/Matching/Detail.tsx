@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { green } from '@material-ui/core/colors';
 import { Link } from "react-router-dom";
 
+import { store } from "store/store";
 import AuthRequired from "components/AuthRequired";
 import Chat from "components/Chat";
 import { PaymentStatusSmall } from "components/PaymentStatus";
@@ -13,14 +14,20 @@ import { getMatchingDetail } from "libs/ServerClient";
 export default function Detail() {
   const { id: matchingId } = useParams() as { id: string };
   const matching = getMatchingDetail(matchingId);
+  const {
+    state
+  } = useContext(store);
+
+  const isLogInUser = (id: string) => (id === (state.user && state.user.id));
 
   return (
     <AuthRequired>
       <>
-        <h3>相談者情報</h3>
-        <p>{matching.speaker.companyName}</p>
-        <p>{matching.speaker.jobName} {matching.speaker.verified && <b style={{ color: green[800] }}>認証済み</b>}</p>
-
+        { isLogInUser(matching.listener.id) && <>
+          <h3>{matching.speaker.companyName}</h3>
+          <p>{matching.speaker.jobName} {matching.speaker.verified && <b style={{ color: green[800] }}>認証済み</b>}</p>
+        </>
+        }
         <h3>質問内容</h3>
         <p>{matching.inquiry}</p>
 
@@ -33,19 +40,22 @@ export default function Detail() {
           }
         </p>
 
-        <h3>支払い</h3>
-        <PaymentStatusSmall payment={matching.payment} />: {commafy(matching.payment.amount)}円 <br />
-        {matching.payment.dueDate && <>支払期限: {convertDateTime(matching.payment.dueDate)} </>}
-        {matching.payment.status === "pending" &&
-          <Link
-          to="#hoge"
-          >
-            支払いリンク
+        { isLogInUser(matching.listener.id) && <>
+          <h3>支払い</h3>
+          <PaymentStatusSmall payment={matching.payment} />: {commafy(matching.payment.amount)}円 <br />
+          {matching.payment.dueDate && <>支払期限: {convertDateTime(matching.payment.dueDate)} </>}
+          {matching.payment.status === "pending" &&
+            <Link
+              to="#hoge"
+            >
+              支払いリンク
           </Link>
+          }
+        </>
         }
 
         <h3>メッセージ</h3>
-        <Chat roomId={matching.chatRoomId}/>
+        <Chat roomId={matching.chatRoomId} />
       </>
     </AuthRequired>
   );
