@@ -1,10 +1,12 @@
 import os
+import uuid
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.mysql import INTEGER as Integer
 from sqlalchemy.dialects.mysql import TINYINT as Tinyint
 from sqlalchemy.dialects.mysql import TIMESTAMP as Timestamp
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.types import DateTime
 
@@ -19,7 +21,7 @@ db = SQLAlchemy() if not is_test else TestSQLAlchemy()
 class User(db.Model):
     __abstract__ = True  # this model should not be created in the database
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
     name = db.Column(db.String(80), unique=False, nullable=False)
     date_of_birth = db.Column(db.Date, unique=False, nullable=False)
     tel_number = db.Column(db.String(11), unique=True, nullable=False)
@@ -65,7 +67,7 @@ class Worker(User):
 class University(db.Model):
     __tablename__ = "universities"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
     name = db.Column(db.String(80), unique=False, nullable=False)
     students = db.relationship("Student", backref="university")
 
@@ -73,7 +75,7 @@ class University(db.Model):
 class Company(db.Model):
     __tablename__ = "companies"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
     name = db.Column(db.String(80), unique=False, nullable=False)
     workers = db.relationship("Worker", backref="company")
 
@@ -81,7 +83,7 @@ class Company(db.Model):
 class Job(db.Model):
     __tablename__ = "jobs"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
     name = db.Column(db.String(80), unique=True, nullable=False)
     workers = db.relationship("Worker", backref="job")
 
@@ -89,7 +91,7 @@ class Job(db.Model):
 class Match(db.Model):
     __tablename__ = "matches"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
     date = db.Column(db.DateTime, unique=False, nullable=True)
     speaker_id = db.Column(db.Integer, db.ForeignKey("workers.id"))
     listener_id = db.Column(db.Integer, db.ForeignKey("students.id"))
