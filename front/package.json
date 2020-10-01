@@ -13,6 +13,7 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-router-dom": "^5.1.5",
+    "@types/humps": "^2.0.0",
     "axios": "^0.20.0",
     "dayjs": "^1.9.1",
     "humps": "^2.0.1",
@@ -47,7 +48,6 @@
     ]
   },
   "devDependencies": {
-    "@types/humps": "^2.0.0",
     "http-proxy-middleware": "^1.0.5"
   }
 }
