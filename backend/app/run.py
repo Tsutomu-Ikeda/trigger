@@ -1,10 +1,14 @@
-from flask import request, jsonyfy
+from flask import request, jsonify
 
 from app import app
 from models import (
-    Student,
-    Worker,
+    db,
+    Company,
     Match,
+    Student,
+    University,
+    User,
+    Worker,
 )
 from schema import (
     student_schema,
@@ -14,45 +18,109 @@ from schema import (
     match_schema,
     matches_schema,
 )
-
-@app.route("/api/login")
-def login():
-    # 優先度低い
-    # セッション？
-    def get():
-        return jsonyfy({"user_id": "hoge"})
-    def post():
-        pass
+from utils import check_password_hash, generate_password_hash
 
 
-@app.route("/api/auth", methods=["POST"])
-def auth():
-    # ユーザ登録を行う
-    # get param
+@app.route("/api/healthcheck", methods=["GET"])
+def test():
+    return jsonify({"status": "ok"})
+
+
+@app.route("/api/register", methods=["POST"])
+def register():
+    # ユーザ登録
+    # extract body
     req = request.json
-    user_type = req["user_type"]
+    email = req["email"]
+    password_hash = generate_password_hash(req["password"])
+    affiliation_name = req["affiliation"]  # 文字列が送られてくることを想定
+    user_dict = {
+        "name": req["name"],
+        "date_of_birth": req["date_of_birth"],
+        "tel_number": req["tel_number"],
+        "email": req["email"],
+        "password_hash": password_hash,
+        "user_type": req["user_type"],
+        "type_card_url": req["type_card_url"],  # FIXME: S3 上の一意なファイル名になるかも
+        "identity_card_url": req["identity_card_url"],  # FIXME: S3 上の一意なファイル名になるかも
+        "is_authenticated": False,  # オペレータがチェックしたら True になる
+    }
 
-    # バイナリが来るか，URL が来るかで変わる
-    if user_type == "student":
-        user = Student(
-            name=req["name"],
-            date_of_birth=req["date_of_birth"],
-            tel_number=req["tel_number"],
-            email=["email"],
+    # email の照合
+    # FIXME: 本当は Users やビューを使って一括でクエリを実行したい
+    students_same_email = Student.query.filter_by(email=email).first()
+    workers_same_email = Worker.query.filter_by(email=email).first()
+
+    if students_same_email or workers_same_email:
+        # 同じ Email アドレスが存在するためログイン失敗
+        return jsonify(
+            {
+                "is_logined": False,
+                "user_id": "",
+                "is_authenticated": False,  # 本人確認等が終わってないので「認証ユーザではない」
+                "message": "ユーザ登録に失敗しました．同じ Email アドレスが既に登録されています．",
+            }
         )
-    # TODO: ユーザ情報が全部載せ（テキスト，画像ファイル）で来る
-    # TODO: 画像ファイルは AWS S3 にアップロードして URL を発行
-    # TODO: 「登録完了した何か」を返す
-    # 認証周りの話
-    # - Cookie をテーブルで管理する？
-    # - Cookie ヘッダを返す
 
-    return jsonify({
-        "id": "",
-        "user_type": "",
-        "is_logined": True,  # ログインは OK
-        "is_authenticated": False,  # 本人確認等が終わってないので「認証ユーザではない」
-    })
+    if user_dict["user_type"] == "student":
+        # TODO: University はあらかじめ DB 側に固定されてユーザが登録側で選択できる想定
+        # TODO: DB に入れておく必要がある
+        university = University.query.filter_by(name=affiliation_name).first()
+        user_dict.update({"affiliation_id": university.id})
+        user = Student(**user_dict)
+    else:
+        # Company はユーザが入力する部分．テーブルに無ければ作成する
+        company = Company.query.filter_by(name=affiliation_name).first()
+        if not company:
+            # Company を新規作成
+            company = Company(name=affiliation_name)
+            db.session.add(company)
+
+        worker_dict = {
+            "affiliation_id": company.id,
+            "job": req["job"],
+            "department": req["department"],
+            "position": req["position"],
+            "comment": req["comment"],
+        }
+        user_dict.update(worker_dict)
+        user = Worker(**user_dict)
+
+    db.session.add(user)
+    db.session.commit()
+
+    # 認証周りの話
+    # FIXME: レスポンスヘッダに Cookie 載せる？
+    # - その前に Cookie をテーブルで管理しないといけない
+
+    return jsonify(
+        {
+            "is_logined": True,  # ログインは OK
+            "user_id": user.id,
+            "is_authenticated": False,  # 本人確認等が終わってないので「認証ユーザではない」
+            "message": "ユーザ登録に成功しました",
+        }
+    )
+
+
+@app.route("/api/login", methods=["POST"])
+def login():
+    # ログイン
+    email = request.json["email"]
+    password = request.json["password"]
+
+    user = User.query.filter(User.email == email).first()
+
+    if not user:
+        # ユーザが存在しない
+        return {"is_logined": False, "id": "", "user_type": ""}
+    else:
+        # TODO: ハッシュ値の比較
+        is_logined = check_password_hash(user, password)
+        # FIXME: レスポンスヘッダに Cookie 載せる？
+        return jsonify(
+            {"is_logined": is_logined, "id": user.id, "user_type": user.user_type}
+        )
 
 
 @app.route("/api/matching", methods=["GET"])
