@@ -19,6 +19,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
     "skyway-js": "^3.0.2",
+    "tone": "^14.7.58",
     "typescript": "~3.7.2",
     "use-reducer-async": "^2.0.1"
   },
