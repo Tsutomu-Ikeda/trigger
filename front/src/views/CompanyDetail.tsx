@@ -32,7 +32,7 @@ export default function Company() {
 
   useEffect(
     () => { (async () => { setCompany(await getCompanyDetail(companyId)) })() }
-    , []
+    , [companyId]
   )
 
   return (

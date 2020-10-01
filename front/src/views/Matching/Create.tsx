@@ -25,7 +25,7 @@ export default function Create() {
 
   useEffect(() => {
     (async () => { if (workerId) setWorker(await getWorkerDetail(workerId)) })()
-  }, []
+  }, [workerId]
   )
 
   const onSubmitButtonClicked = async (e: FormEvent) => {
