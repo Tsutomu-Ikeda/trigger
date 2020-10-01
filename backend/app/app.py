@@ -14,6 +14,7 @@ def create_app():
         os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS")
     )
     app.config["SQLALCHEMY_ECHO"] = bool(os.getenv("SQLALCHEMY_ECHO"))
+    app.secret_key = os.getenv("SESSION_SECRET_KEY")
 
     # DB config
     db.init_app(app)  # DB と Flask の接続部分
