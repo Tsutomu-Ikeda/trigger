@@ -21,7 +21,7 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
-    date_of_birth = db.Column(db.DateTime, unique=False, nullable=False)
+    date_of_birth = db.Column(db.Date, unique=False, nullable=False)
     tel_number = db.Column(db.String(11), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(120), unique=False, nullable=False)
@@ -48,6 +48,7 @@ class Student(User):
     __tablename__ = "students"
 
     affiliation_id = db.Column(db.Integer, db.ForeignKey("universities.id"))
+    matches = db.relationship("Match", order_by="Match.created_at", backref="students")
 
 
 class Worker(User):
@@ -56,12 +57,9 @@ class Worker(User):
     affiliation_id = db.Column(db.Integer, db.ForeignKey("companies.id"))
     department = db.Column(db.String(120), unique=False, nullable=True)
     position = db.Column(db.String(120), unique=False, nullable=True)
-    job = db.Column(db.Integer, db.ForeignKey("jobs.id"))
+    job_id = db.Column(db.Integer, db.ForeignKey("jobs.id"))
     comment = db.Column(db.String(80), unique=False, nullable=True)
-
-    def __init__(self, username, email):
-        self.username = username
-        self.email = email
+    matches = db.relationship("Match", order_by="Match.created_at", backref="workers")
 
 
 class University(db.Model):
@@ -69,6 +67,7 @@ class University(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
+    students = db.relationship("Student", backref="university")
 
 
 class Company(db.Model):
@@ -76,6 +75,7 @@ class Company(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
+    workers = db.relationship("Worker", backref="company")
 
 
 class Job(db.Model):
@@ -83,6 +83,7 @@ class Job(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
+    workers = db.relationship("Worker", backref="job")
 
 
 class Match(db.Model):
@@ -97,6 +98,12 @@ class Match(db.Model):
     is_matched = db.Column(db.Boolean, unique=False, nullable=True)
     is_done_meeting = db.Column(db.Boolean, unique=False, nullable=True, default=False)
     is_done_payment = db.Column(db.Boolean, unique=False, nullable=True, default=False)
+    created_at = db.Column(
+        Timestamp, unique=False, nullable=False, default=datetime.utcnow
+    )
+    updated_at = db.Column(
+        Timestamp, unique=False, nullable=False, default=datetime.utcnow
+    )
 
     def __init__(
         self,

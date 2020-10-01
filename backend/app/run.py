@@ -1,4 +1,7 @@
+import os
+
 from flask import request, jsonify
+from flasgger import swag_from, Swagger
 
 from app import app
 from models import (
@@ -15,18 +18,28 @@ from schema import (
     students_schema,
     worker_schema,
     workers_schema,
+    university_schema,
+    universities_schema,
+    company_schema,
+    companies_schema,
     match_schema,
     matches_schema,
 )
 from utils import check_password_hash, generate_password_hash
 
 
+if not bool(os.getenv("IS_TEST")):
+    # テスト環境では表示しない
+    swagger = Swagger(app)
+
+
 @app.route("/api/healthcheck", methods=["GET"])
-def test():
+def healthchek():
     return jsonify({"status": "ok"})
 
 
 @app.route("/api/register", methods=["POST"])
+@swag_from("swagger/register.yml")
 def register():
     # ユーザ登録
     # extract body
@@ -104,6 +117,7 @@ def register():
 
 
 @app.route("/api/login", methods=["POST"])
+@swag_from("swagger/login.yml")
 def login():
     # ログイン
     email = request.json["email"]
@@ -124,60 +138,76 @@ def login():
 
 
 @app.route("/api/matching", methods=["GET"])
-def matches_list(): # マッチ履歴と予定
+def matches_list():  # マッチ履歴と予定
     # http://hoge.com?key=value&key2=value2
     # value = request.args['key']
-    # value2 = request.args['key2']  
+    # value2 = request.args['key2']
     # return jsonyfy({"user_id": "hoge"})
     # 全てのマッチングを引っ張る
     # TODO: speaker,listennerのIDを受け取る
     # TODO: ユーザのマッチングを返す
     # TODO: 「予定」と「終わった」マッチングを返す is_done_payment
-    
+
     # TODO:所属返すのどうするか（必要機能か？）
     mathches = Match.query.filter_by(
-        listener_id=current_user_id, is_done_meeting=False).all()
+        listener_id=current_user_id, is_done_meeting=False
+    ).all()
     done_mathches = Match.query.filter_by(
-        listener_id=current_user_id, is_done_meeting=True).all()
-    return matches_schema.jsonify(matches+done_mathches)
-
-        
-
+        listener_id=current_user_id, is_done_meeting=True
+    ).all()
+    return matches_schema.jsonify(matches + done_mathches)
 
 
 @app.route("/api/matching/apply", methods=["GET"])
 def apply_match():  # 申し込み
-    speaker_id = request.json['speaker_id']
-    listener_id = request.json['listener_id']
-    apply_comment = request.json['apply_comment']
+    speaker_id = request.json["speaker_id"]
+    listener_id = request.json["listener_id"]
+    apply_comment = request.json["apply_comment"]
 
-    match = Match(speaker_id=speaker_id, listener_id=listener_id) # TODO:この書き方いいのか?
+    match = Match(speaker_id=speaker_id, listener_id=listener_id)  # TODO:この書き方いいのか?
     db.session.add(match)
     db.session.commit()
     # TODO: speaker ID, listener ID, 相談内容を受け取る
     # TODO: メール送信する
 
 
-@app.route("/api/matching/update", methods=["POST"])
-def matching():
-    def post():  # 重そう
-        # TODO: match ID, 取得してis_matchedの更新
-        # TODO: speaker ID, listener ID, 相談内容を受け取る
-        # TODO: メール送信する
-        # 
+# @app.route("/api/matching/<string:type>", methods=["POST"])
+# def matching(type):
+#     if type == "apply":
+#         # マッチング申し込み
+#         # TODO: Match レコードの作成
+#         pass
+#     elif type == "ok":
+#         # マッチング確定
+#         # TODO: is_matched を True にする
+#         pass
+#     elif type == "decide":
+#         # 日程を確定
+#         pass
+#     elif type == "update":
+#         # マッチングの日程を変更
+#         pass
+#     elif type == "done":
+#         # ミーティング終了
+#         pass
 
 
-@app.route("/api/company")
-def company():
-    def get():
-        # TODO: 会社名を GET で受け取る
-        # TODO: 会社名が含まれていたらレコードを返す
-        return [{}, {}]
-    def post():
-        # TODO: 会社 ID を POST? で受け取る
-        # TODO: 会社の ID に一致する Worker を返す
-        # ページング処理
-        return [{}, {}]
+@app.route("/api/company/search", methods=["GET"])
+def search_companies():
+    # 会社検索のエンドポイント
+    # extract query
+    company_name = request.args["q"]
+    companies = Company.query.filter(Company.name.ilike(company_name)).all()
+    # 名寄せしたいね
+
+    return companies_schema.jsonify(companies)
+
+
+@app.route("/api/company/<comapany_id>", methods=["POST"])
+def company(company_id):
+    workers = Worker.query.filter_by(affiliation_id=company_id)
+
+    return workers_schema.jsonify(workers)
 
 
 ###########################
@@ -189,21 +219,18 @@ def company():
 def hoge():
     def get():
         pass
+
     def post():
         pass
 
 
 ###########################
 # 金融 Stripe の決済基盤
-# TODO: せいぜいモックくらい
 ###########################
-@app.route("/api/payment")
+@app.route("/api/payment", methods=["POST"])
 def payment():
-    def get():
-        pass
-    def post():
-        pass
-
+    # matching ID を受け取って完了にする
+    pass
 
 
 if __name__ == "__main__":
