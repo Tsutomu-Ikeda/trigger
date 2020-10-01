@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.dialects.mysql import CHAR
 from sqlalchemy.dialects.mysql import INTEGER as Integer
 from sqlalchemy.dialects.mysql import TINYINT as Tinyint
 from sqlalchemy.dialects.mysql import TIMESTAMP as Timestamp
@@ -49,17 +50,17 @@ class User(db.Model):
 class Student(User):
     __tablename__ = "students"
 
-    affiliation_id = db.Column(db.Integer, db.ForeignKey("universities.id"))
+    saffiliation_id = db.Column(UUID(as_uuid=True), db.ForeignKey("universities.id"))
     matches = db.relationship("Match", order_by="Match.created_at", backref="students")
 
 
 class Worker(User):
     __tablename__ = "workers"
 
-    affiliation_id = db.Column(db.Integer, db.ForeignKey("companies.id"))
+    affiliation_id = db.Column(UUID(as_uuid=True), db.ForeignKey("companies.id"))
     department = db.Column(db.String(120), unique=False, nullable=True)
     position = db.Column(db.String(120), unique=False, nullable=True)
-    job_id = db.Column(db.Integer, db.ForeignKey("jobs.id"))
+    job_id = db.Column(UUID(as_uuid=True), db.ForeignKey("jobs.id"))
     comment = db.Column(db.String(80), unique=False, nullable=True)
     matches = db.relationship("Match", order_by="Match.created_at", backref="workers")
 
@@ -79,6 +80,10 @@ class Company(db.Model):
     name = db.Column(db.String(80), unique=False, nullable=False)
     workers = db.relationship("Worker", backref="company")
 
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
+
 
 class Job(db.Model):
     __tablename__ = "jobs"
@@ -87,14 +92,17 @@ class Job(db.Model):
     name = db.Column(db.String(80), unique=True, nullable=False)
     workers = db.relationship("Worker", backref="job")
 
+    def __init__(self, name):
+        self.name
+
 
 class Match(db.Model):
     __tablename__ = "matches"
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
     date = db.Column(db.DateTime, unique=False, nullable=True)
-    speaker_id = db.Column(db.Integer, db.ForeignKey("workers.id"))
-    listener_id = db.Column(db.Integer, db.ForeignKey("students.id"))
+    speaker_id = db.Column(UUID(as_uuid=True), db.ForeignKey("workers.id"))
+    listener_id = db.Column(UUID(as_uuid=True), db.ForeignKey("students.id"))
     meeting_length = db.Column(db.Integer)
     audio_url = db.Column(db.String(120), unique=True, nullable=True)
     is_matched = db.Column(db.Boolean, unique=False, nullable=True)

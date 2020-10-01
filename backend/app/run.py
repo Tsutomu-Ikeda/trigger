@@ -91,7 +91,7 @@ def register():
 
         worker_dict = {
             "affiliation_id": company.id,
-            "job": req["job"],
+            "job_id": req["job"],
             "department": req["department"],
             "position": req["position"],
             "comment": req["comment"],
@@ -130,9 +130,7 @@ def login():
         return {"is_logined": False, "id": "", "user_type": ""}
     else:
         is_logined = check_password_hash(user, password)
-        response = jsonify(
-            {"is_logined": is_logined, "user_id": user.id, "user_type": user.user_type}
-        )
+        response = jsonify({"user_id": user.id, "user_type": user.user_type})
         response.set_cookie(key="user_id", value=user.id, expires=None)
 
         return response
@@ -156,11 +154,11 @@ def matches_list():  # マッチ履歴と予定
     # 全てのマッチングを引っ張る
     # TODO: speaker,listennerのIDを受け取る
     # TODO: ユーザのマッチングを返す
-    # TODO: 「予定」と「終わった」マッチングを返す is_done_payment
+    # 「予定」と「終わった」マッチングを返す is_done_payment
 
     # TODO:所属返すのどうするか（必要機能か？）
 
-    user_id = ["user_id"]
+    user_id = session["user_id"]
     will_matches = Match.query.filter_by(
         listener_id=user_id, is_done_meeting=False
     ).all()
@@ -173,45 +171,67 @@ def matches_list():  # マッチ履歴と予定
 
 
 @app.route("/api/matching/apply", methods=["POST"])
-def apply_match():  # 申し込み
+def apply_match():  
+    # 面談申し込み
+    # listener 学生
+    #　speaker 社会人
     speaker_id = request.json["speaker_id"]
     listener_id = request.json["listener_id"]
     apply_comment = request.json["apply_comment"]
 
-    match = Match(speaker_id=speaker_id, listener_id=listener_id)  # TODO:この書き方いいのか?
+    match = Match(
+        speaker_id=speaker_id,
+        listener_id=listener_id,
+        date=None,
+        is_done_payment=None,
+        is_done_meeting=None,
+        is_matched=None
+    )
     db.session.add(match)
     db.session.commit()
-    # TODO: speaker ID, listener ID, 相談内容を受け取る
     # TODO: メール送信する
 
 
 @app.route("/api/matching/update", methods=["POST"])
-def matching(type):
-    # 1. Match レコードの作成
-    # TODO: 2. マッチング確定
-    # TODO: is_matched を True にする
-    # TODO: マッチング ID と日程が POST される
-    # TODO: 確定した日程等の情報をメールで送信
-    # TODO: 3. ミーティング終了
-    # TODO: ミーティングの情報が送信されてくる
-    # TODO: is_done_meeting を True にする
-    pass
+def matching():
+    match_id = request.json["match_id"]
+    is_matched = request.json["is_matched"]
+    is_done_meeting = request.json["is_done_meeting"]
+
+    # match = Match.query.get(match_id)
+
+    Match.query.filter_by(id=match_id).update(
+        {Match.is_matched: is_matched, Match.is_done_meeting: is_done_meeting}
+    )
 
 
 @app.route("/api/company/search", methods=["GET"])
 def search_companies():
     # 会社検索のエンドポイント
-    company_name = request.args["q"]
+    query = request.args["q"]
     companies = Company.query.filter(Company.name.ilike(company_name)).all()
 
-    return companies_schema.jsonify(companies)
+    return companies_schema.jsonify({
+        "query": query,
+        "num_companies": len(companies),
+        "companies": companies
+    })
 
 
-@app.route("/api/company/<comapany_id>", methods=["POST"])
+@app.route("/api/company/<company_id>", methods=["GET"])
 def company(company_id):
-    workers = Worker.query.filter_by(affiliation_id=company_id)
+    # 特定の会社の相談者を全て表示する
+    company = Company.query.get(company_id)
+    workers = Worker.query.filter_by(affiliation_id=company_id).all()
 
-    return workers_schema.jsonify(workers)
+    return workers_schema.jsonify(
+        {
+            "company_id": company_id,
+            "company_name": company.name,
+            "num_workers": len(workers),
+            "workers": workers,
+        }
+    )
 
 
 ###########################

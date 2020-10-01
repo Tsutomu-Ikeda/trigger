@@ -1,5 +1,9 @@
 # バックエンド
 
+- アプリケーションの起動
+- API ドキュメント
+- 環境構築
+
 ## アプリケーションの起動
 
 ### basic
@@ -107,6 +111,175 @@ mysql> show databases;  # SQL が実行できる
 mysql> show tables;
 ...
 ```
+
+---
+
+## API ドキュメント
+
+- パスプレフィックス `/api`
+- エンドポイント
+  - `/register`
+  - `/login`
+  - `/logout`
+  - `/matching`
+  - `/company`
+  - `/call`
+  - `/payment`
+
+### /register
+
+ユーザ登録
+
+#### GET
+
+None
+
+#### POST
+
+ユーザ情報を受け取り，ログイン情報を返す．
+
+- request
+
+```json
+{
+
+}
+```
+
+### /login
+
+ログイン
+
+#### GET
+
+None
+
+#### POST
+
+Email アドレスとパスワードを受け取り，ユーザ ID を返す．
+
+- request
+
+```json
+{
+  "email": "buttyake@sample.com", // string
+  "password": "buttyake-password"  // int
+}
+```
+
+- response
+
+```json
+{
+  "user_id": "550e8400-e29b-41d4-a716-446655440000",  // UUID: string
+  "user_type": "student" | "worker"  // string
+}
+```
+
+### /logout
+
+ログアウト
+
+#### GET
+
+セッションを切り，ログアウトする．
+
+- request
+  - parameter
+    - None
+- response
+
+```json
+{
+  "message": "ログアウトしました"  // string
+}
+```
+
+#### POST
+
+None
+
+### /matching
+
+#### GET
+
+- 
+
+#### POST
+
+### /company
+
+企業のデータ関連
+
+#### /company/search
+
+##### GET
+
+検索クエリでフィルタリングされた企業のリストを返す．
+
+- request
+  - パス：`/api/company/search?q=searchquery`
+  - parameter
+    - `q`：検索クエリ
+- response
+
+```json
+{
+  "query": "Sansan", // string
+  "num_companies": 24,  // int
+  "companies": [
+    {
+      "user_id": "550e8400-e29b-41d4-a716-446655440000"  // UUID: string
+      "name": "Sansan 株式会社"  // string
+    },
+    {
+      "user_id": "005edk90-e37c-4874-3c17-546379440990"  // UUID: string
+      "name": "SANSAN Inc."  // string
+    },
+    ...
+  ]
+}
+```
+
+##### POST
+
+None
+
+#### /company/:company_id
+
+##### GET
+
+特定の会社の相談者を全て表示する．
+
+- request
+  - パス：`/api/company/550e8400-e29b-41d4-a716-446655440000`
+  - parameter
+    - None
+- response
+
+```json
+{
+  "company_id": "550e8400-e29b-41d4-a716-446655440000",  // UUID: string
+  "company_name": "Sansan 株式会社",
+  "num_workers": 35,
+  "workers": [
+    {}
+  ]
+}
+```
+
+##### POST
+
+None
+
+
+### /call
+
+None
+
+### /payment
+
+None
 
 ---
 
