@@ -1,40 +1,28 @@
+import axios from "axios";
+import { camelizeKeys as _camelizeKeys } from "humps";
+
+const camelizeKeys = (obj: any) => _camelizeKeys(obj) as any;
+
 export type PaymentStatusType = "finished" | "pending" | "error";
 
 export const signIn = async (email: string, password: string) => {
-  return {
-    // id: "42d5a38e-fd54-4ee5-8944-86e7f74e8893",
-    id: "6924e1b2-b197-4fb6-bb78-22f904b801d4",
+  const data = (await axios.post("/api/login", { email, password })).data;
+
+  return { id: data.user_id } as {
+    id: string;
   };
 };
 
-export const searchCompany = (searchQuery: string) => {
-  const reversed = (word: string) =>
-    [...word.split("")].reduceRight((p, c) => p + c);
+export const searchCompany = async (searchQuery: string) => {
+  const params = new URLSearchParams({ q: searchQuery });
+  const data = (await axios.get("/api/company/search", { params })).data;
 
-  return {
-    numCompanies: 24,
-    companies: [
-      {
-        name: `${searchQuery} 株式会社`,
-        id: "98ccc4e5-e0b4-4fec-9767-145eec608bb2",
-      },
-      {
-        name: `株式会社 ${searchQuery}${searchQuery}`,
-        id: "7b699659-1e0d-41a1-8c73-d9e34d428acf",
-      },
-      {
-        name: `合名会社 ${searchQuery}★＆${searchQuery}☆`,
-        id: "c3a1dc79-caef-4bac-bef4-6a7be36fe75c",
-      },
-      {
-        name: `${searchQuery}は${searchQuery}を救う`,
-        id: "2e259fd1-b43d-4dbb-96ac-b8664cc26f23",
-      },
-      {
-        name: `${searchQuery}${reversed(searchQuery)}出版`,
-        id: "bd4828a5-e259-43ae-981a-23f53484f4b0",
-      },
-    ],
+  return camelizeKeys(data) as {
+    numCompanies: number;
+    companies: {
+      name: string;
+      id: string;
+    }[];
   };
 };
 
@@ -63,90 +51,69 @@ export const searchMoreCompany = (searchQuery: string, offset: number) => {
   ];
 };
 
-export const getCompanyDetail = (id: string) => {
-  return {
-    name: "Hoge 株式会社",
-    id: id,
-    workersRegistered: 12,
-    workers: [
-      {
-        id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-        jobName: "サーバーサイドエンジニア",
-        verified: false,
-        comment:
-          "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-      },
-      {
-        id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-        jobName: "iOSエンジニア",
-        verified: true,
-        comment:
-          "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-      },
-      {
-        id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-        jobName: "フロントエンドエンジニア",
-        verified: true,
-        comment:
-          "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-      },
-      {
-        id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-        jobName: "インフラエンジニア",
-        verified: true,
-        comment:
-          "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-      },
-      {
-        id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-        jobName: "研究開発職",
-        verified: false,
-        comment:
-          "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-      },
-    ],
+export const getCompanyDetail = async (id: string) => {
+  const { company_name: name, workers, num_workers: workers_registered } = (
+    await axios.get(`/api/company/${id}`)
+  ).data;
+  const data = {
+    id,
+    name,
+    workers,
+    workers_registered,
+  };
+
+  return camelizeKeys(data) as {
+    name: string;
+    id: string;
+    workersRegistered: number;
+    workers: {
+      id: string;
+      job: { name: string };
+      isAuthenticated: boolean;
+      comment: string;
+    }[];
   };
 };
 
-export const getMoreWorkers = (companyId: string, offset: number) => {
-  return [
-    {
-      id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-      jobName: "サーバーサイドエンジニア",
-      verified: false,
-      comment:
-        "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-    },
-    {
-      id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-      jobName: "iOSエンジニア",
-      verified: true,
-      comment:
-        "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-    },
-    {
-      id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-      jobName: "フロントエンドエンジニア",
-      verified: true,
-      comment:
-        "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-    },
-    {
-      id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-      jobName: "インフラエンジニア",
-      verified: true,
-      comment:
-        "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-    },
-    {
-      id: "45bc28ee-1776-44af-bc07-9314ce22a909",
-      jobName: "研究開発職",
-      verified: false,
-      comment:
-        "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
-    },
-  ];
-};
+// export const getMoreWorkers = (companyId: string, offset: number) => {
+//   return [
+//     {
+//       id: "45bc28ee-1776-44af-bc07-9314ce22a909",
+//       jobName: "サーバーサイドエンジニア",
+//       verified: false,
+//       comment:
+//         "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
+//     },
+//     {
+//       id: "45bc28ee-1776-44af-bc07-9314ce22a909",
+//       jobName: "iOSエンジニア",
+//       verified: true,
+//       comment:
+//         "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
+//     },
+//     {
+//       id: "45bc28ee-1776-44af-bc07-9314ce22a909",
+//       jobName: "フロントエンドエンジニア",
+//       verified: true,
+//       comment:
+//         "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
+//     },
+//     {
+//       id: "45bc28ee-1776-44af-bc07-9314ce22a909",
+//       jobName: "インフラエンジニア",
+//       verified: true,
+//       comment:
+//         "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
+//     },
+//     {
+//       id: "45bc28ee-1776-44af-bc07-9314ce22a909",
+//       jobName: "研究開発職",
+//       verified: false,
+//       comment:
+//         "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
+//     },
+//   ];
+// };
 
 export const getUpcomingEvents = () => [
   {
@@ -202,34 +169,26 @@ export const getRecentPayments = () => [
   },
 ];
 
-export const getWorkerDetail = (id: string) => {
-  return {
-    id,
-    jobName: "サーバーサイドエンジニア",
-    companyName: "Sansan株式会社",
-    verified: true,
-    comment:
-      "がんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばりますがんばります",
+export const getWorkerDetail = async (id: string) => {
+  const data = (await axios.get(`/api/worker/${id}`)).data;
+  return camelizeKeys(data) as {
+    comment: string;
+    company: {
+      name: string;
+    };
+    id: string;
+    isAuthenticated: boolean;
+    job: {
+      name: string;
+    };
   };
 };
 
-export const createNewMatching = (inquiry: string, workerId: string) => {
-  return {
-    id: "5a8ad977-526e-4e88-bc92-e52bb698fc5b",
-    startDate: null,
-    endDate: null,
-    inquiry,
-    worker: {
-      id: workerId,
-      companyName: "ClipLine株式会社",
-    },
-    payment: {
-      status: "pending" as PaymentStatusType,
-      amount: 1000,
-      date: null,
-      dueDate: null,
-    },
-  };
+export const createNewMatching = async (inquiry: string, workerId: string) => {
+  return (await axios.post("/api/matching/apply", {
+    speaker_id: workerId,
+    apply_comment: inquiry,
+  })).data as { id: string };
 };
 
 export const getMatchingDetail = (id: string) => {

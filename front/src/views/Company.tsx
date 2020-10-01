@@ -43,10 +43,10 @@ export default function Company() {
   const history = useHistory();
   const query = useQuery();
 
-  const onSearchButtonClicked = (e: FormEvent) => {
+  const onSearchButtonClicked = async (e: FormEvent) => {
     e.preventDefault();
     history.pushState({}, "", `?q=${searchQuery}`);
-    setSearchResult(searchCompany(searchQuery));
+    setSearchResult(await searchCompany(searchQuery));
   };
 
   const onSearchMoreClick = () => {
@@ -63,15 +63,16 @@ export default function Company() {
   }, [])
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      const queryFromUrl = query.get("q");
-      if (queryFromUrl) {
-        setSearchQuery(queryFromUrl);
-        setSearchResult(searchCompany(queryFromUrl));
+    (async () => {
+      if (isFirstRender.current) {
+        const queryFromUrl = query.get("q");
+        if (queryFromUrl) {
+          setSearchQuery(queryFromUrl);
+          setSearchResult(await searchCompany(queryFromUrl));
+        }
+        isFirstRender.current = false
       }
-      isFirstRender.current = false
-    }
-
+    })();
   }, [query, searchQuery]);
 
   return (
@@ -92,7 +93,7 @@ export default function Company() {
             <SearchIcon />
           </IconButton>
         </Paper>
-        {searchResult.numCompanies ?
+        {searchResult.numCompanies !== null ?
           <>
             <Divider style={{ margin: "20px 0px" }} />
         検索結果 {searchResult.numCompanies} 件
