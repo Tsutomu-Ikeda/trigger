@@ -203,9 +203,61 @@ None
 
 #### GET
 
-- 
+ユーザの現在のマッチング一覧を返す（ユーザ ID はフロントから渡されない？セッションから受け取る？）
+
+- request
+  - parameter
+    - None
+- response
+
+```json
+```
 
 #### POST
+
+None
+
+#### /matching/apply
+
+##### GET
+
+None
+
+##### POST
+
+- request
+
+```json
+{
+  "seapker_id": "UUID",  // 相談役のユーザ ID
+  "listener_id": "UUID",  // 相談者のユーザ ID
+  "apply_comment" : "就活の闇を包み隠さず教えてください",  // 相談者が申請時に入力するコメント
+}
+```
+
+#### /matching/update
+
+マッチングの内容を更新する．
+
+#### GET
+
+None
+
+#### POST
+
+- request
+
+```json
+{
+  "match_id": "UUID",  // UUID
+  "is_matched": true,  // boolean
+  "is_done_meeting": true,  // boolean
+}'
+```
+
+- response
+
+None
 
 ### /company
 
@@ -263,7 +315,24 @@ None
   "company_name": "Sansan 株式会社",
   "num_workers": 35,
   "workers": [
-    {}
+    {
+      "id": "UUID",
+      "job": {
+        "id": "UUID",
+        "name": "フロントエンドエンジニア",
+        "is_authenticated": true,
+        "comment": "がんばります",
+      }
+    },
+    {
+      "id": "UUID",
+      "job": {
+        "id": "UUID",
+        "name": "インフラエンジニア",
+        "is_authenticated": false,
+        "comment": "インフラを始めてから早 10 年",
+      }
+    },
   ]
 }
 ```
