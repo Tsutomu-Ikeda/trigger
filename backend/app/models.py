@@ -3,7 +3,6 @@ import uuid
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.dialects.mysql import CHAR
 from sqlalchemy.dialects.mysql import INTEGER as Integer
 from sqlalchemy.dialects.mysql import TINYINT as Tinyint
 from sqlalchemy.dialects.mysql import TIMESTAMP as Timestamp
@@ -22,7 +21,9 @@ db = SQLAlchemy() if not is_test else TestSQLAlchemy()
 class User(db.Model):
     __abstract__ = True  # this model should not be created in the database
 
-    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
+    id = db.Column(
+        "id", db.String(36), default=lambda: str(uuid.uuid4()), primary_key=True
+    )
     name = db.Column(db.String(80), unique=False, nullable=False)
     date_of_birth = db.Column(db.Date, unique=False, nullable=False)
     tel_number = db.Column(db.String(11), unique=True, nullable=False)
@@ -50,17 +51,17 @@ class User(db.Model):
 class Student(User):
     __tablename__ = "students"
 
-    saffiliation_id = db.Column(UUID(as_uuid=True), db.ForeignKey("universities.id"))
+    affiliation_id = db.Column(db.String(36), db.ForeignKey("universities.id"))
     matches = db.relationship("Match", order_by="Match.created_at", backref="students")
 
 
 class Worker(User):
     __tablename__ = "workers"
 
-    affiliation_id = db.Column(UUID(as_uuid=True), db.ForeignKey("companies.id"))
+    affiliation_id = db.Column(db.String(36), db.ForeignKey("companies.id"))
     department = db.Column(db.String(120), unique=False, nullable=True)
     position = db.Column(db.String(120), unique=False, nullable=True)
-    job_id = db.Column(UUID(as_uuid=True), db.ForeignKey("jobs.id"))
+    job_id = db.Column(db.String(36), db.ForeignKey("jobs.id"))
     comment = db.Column(db.String(80), unique=False, nullable=True)
     matches = db.relationship("Match", order_by="Match.created_at", backref="workers")
 
@@ -68,7 +69,9 @@ class Worker(User):
 class University(db.Model):
     __tablename__ = "universities"
 
-    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
+    id = db.Column(
+        "id", db.String(36), default=lambda: str(uuid.uuid4()), primary_key=True
+    )
     name = db.Column(db.String(80), unique=False, nullable=False)
     students = db.relationship("Student", backref="university")
 
@@ -76,33 +79,38 @@ class University(db.Model):
 class Company(db.Model):
     __tablename__ = "companies"
 
-    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
+    id = db.Column(
+        "id", db.String(36), default=lambda: str(uuid.uuid4()), primary_key=True
+    )
     name = db.Column(db.String(80), unique=False, nullable=False)
     workers = db.relationship("Worker", backref="company")
 
-    def __init__(self, id, name):
-        self.id = id
+    def __init__(self, name):
         self.name = name
 
 
 class Job(db.Model):
     __tablename__ = "jobs"
 
-    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
+    id = db.Column(
+        "id", db.String(36), default=lambda: str(uuid.uuid4()), primary_key=True
+    )
     name = db.Column(db.String(80), unique=True, nullable=False)
     workers = db.relationship("Worker", backref="job")
 
     def __init__(self, name):
-        self.name
+        self.name = name
 
 
 class Match(db.Model):
     __tablename__ = "matches"
 
-    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
+    id = db.Column(
+        "id", db.String(36), default=lambda: str(uuid.uuid4()), primary_key=True
+    )
     date = db.Column(db.DateTime, unique=False, nullable=True)
-    speaker_id = db.Column(UUID(as_uuid=True), db.ForeignKey("workers.id"))
-    listener_id = db.Column(UUID(as_uuid=True), db.ForeignKey("students.id"))
+    speaker_id = db.Column(db.String(36), db.ForeignKey("workers.id"), nullable=False)
+    listener_id = db.Column(db.String(36), db.ForeignKey("students.id"), nullable=False)
     meeting_length = db.Column(db.Integer)
     audio_url = db.Column(db.String(120), unique=True, nullable=True)
     is_matched = db.Column(db.Boolean, unique=False, nullable=True)
