@@ -2,18 +2,42 @@
 
 ## アプリケーションの起動
 
+### basic
+
 - **MUST**：`.env.dev` ファイルを用意
-
-`.env.dev`
-
-```sh
-
-```
-
-- Docker Compose でコンテナを
+- Docker Compose でコンテナを起動
 
 ```sh
 $ docker-compose up
+```
+
+### 環境の初期化
+
+- DB，app 共にまっさらな状態でアプリを起動したい時の手順
+  - コンフリクトなどでマイグレーションの整合性が合わなくなる可能性があるので，そのときはローカルの Docker 環境を初期化する
+  - **永続化した DB の初期化をするので，本番データでは絶対やっちゃだめ**（今回は実際に運用しないから関係ないけど）
+
+```sh
+$ cd backend
+
+# 1. (MUST) DB の初期化（永続化の消去，db コンテナのビルド）
+$ sh build-db.sh
+$ docker-compose build
+$ docker-compose up
+
+# 2. マイグレーション情報の初期化
+# 別のターミナルから flask shell に入る
+$ docker-compose exec app bash
+# 以下，app コンテナ内
+$ rm -rf migrations
+$ flask db init
+$ flask db migrate
+$ flask db upgrade
+
+# 3. DB へのモックデータの挿入
+$ flask shell
+# 以下，ipython
+In [1]: %run init-mockdb.py
 ```
 
 ## DB 関連
