@@ -1,4 +1,4 @@
-from service import aws
+from services import aws
 
 
 mail = {
