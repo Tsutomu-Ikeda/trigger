@@ -1,0 +1,53 @@
+ユーザ新規登録用のエンドポイント
+---
+parameters:
+  - name: name
+    in: body
+    type: string
+    required: true
+  - name: date_of_birth
+    in: body
+    type: string
+    required: true
+  - name: tell_number
+    in: body
+    type: string
+    required: true
+  - name: email
+    in: body
+    type: string
+    required: true
+  - name: password
+    in: body
+    type: string
+    required: true
+  - name: user_type
+    in: body
+    type: string
+    required: true
+  - name: type_card_url
+    in: body
+    type: string
+    required: true
+  - name: identity_card_url
+    in: body
+    type: string
+    required: true
+  - name: affiliation
+    in: body
+    type: string
+    required: true
+responses:
+  200:
+    description: ユーザ登録成功 / 失敗の情報
+    schema:
+      type: object
+      properties:
+        is_logined:
+          type: boolean
+        user_id:
+          type: integer
+        is_authenticated:
+          type: boolean
+        message:
+          type: string
