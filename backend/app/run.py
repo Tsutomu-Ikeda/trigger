@@ -144,16 +144,6 @@ def logout():
 
 @app.route("/api/matching", methods=["GET"])
 def matches_list():  # マッチ履歴と予定
-    # http://hoge.com?key=value&key2=value2
-    # http://buttake-shukatu.com/api/matching?=value&key2=value2
-    # current_user_id = request.json["user_id"]  # POST
-    # current_user_id = request.args["user_id"]  # GET
-    # value = request.args['key']
-    # value2 = request.args['key2']
-    # return jsonyfy({"user_id": "hoge"})
-    # 全てのマッチングを引っ張る
-    # TODO: speaker,listennerのIDを受け取る
-    # TODO: ユーザのマッチングを返す
     # 「予定」と「終わった」マッチングを返す is_done_payment
 
     # TODO:所属返すのどうするか（必要機能か？）
@@ -171,10 +161,10 @@ def matches_list():  # マッチ履歴と予定
 
 
 @app.route("/api/matching/apply", methods=["POST"])
-def apply_match():  
+def apply_match():
     # 面談申し込み
     # listener 学生
-    #　speaker 社会人
+    # speaker 社会人
     speaker_id = request.json["speaker_id"]
     listener_id = request.json["listener_id"]
     apply_comment = request.json["apply_comment"]
@@ -185,7 +175,7 @@ def apply_match():
         date=None,
         is_done_payment=None,
         is_done_meeting=None,
-        is_matched=None
+        is_matched=None,
     )
     db.session.add(match)
     db.session.commit()
@@ -194,6 +184,7 @@ def apply_match():
 
 @app.route("/api/matching/update", methods=["POST"])
 def matching():
+    # マッチング状況の更新
     match_id = request.json["match_id"]
     is_matched = request.json["is_matched"]
     is_done_meeting = request.json["is_done_meeting"]
@@ -209,13 +200,11 @@ def matching():
 def search_companies():
     # 会社検索のエンドポイント
     query = request.args["q"]
-    companies = Company.query.filter(Company.name.ilike(company_name)).all()
+    companies = Company.query.filter(Company.name.ilike(query)).all()
 
-    return companies_schema.jsonify({
-        "query": query,
-        "num_companies": len(companies),
-        "companies": companies
-    })
+    return companies_schema.jsonify(
+        {"query": query, "num_companies": len(companies), "companies": companies}
+    )
 
 
 @app.route("/api/company/<company_id>", methods=["GET"])

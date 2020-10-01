@@ -32,5 +32,34 @@ curl -X POST -H "Content-Type: application/json" -d
 '{
     "email":"buttyake@example.com", 
     "password_hash": "password",
-}' localhost:8080/api//login
+}' localhost:8080/api/login
+
+curl localhost:8080/api/matching
+
+curl -X POST -H "Content-Type: application/json" -d 
+'{
+    "seapker_id":"", 
+    "listener_id": "",
+   "apply_comment" :"",
+}' localhost:8080/api/matching/apply
+
+curl -X POST -H "Content-Type: application/json" -d 
+'{
+    "match_id":"", 
+    "is_matched": 1,
+   "is_done_meeting":0,
+}' localhost:8080/api/matching/update
+
+curl -X POST -H "Content-Type: application/json" -d 
+'{
+    "match_id":"", 
+    "is_matched": 1,
+   "is_done_meeting":1,
+}' localhost:8080/api/matching/update
+
+curl localhost:8080/api/company/search?q=Sansan
+
+curl localhost:8080/api/company/1
+
+
 
