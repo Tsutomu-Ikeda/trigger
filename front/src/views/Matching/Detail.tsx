@@ -35,7 +35,12 @@ export default function Detail() {
         <p>
           {
             matching.startDate && matching.endDate
-              ? convertDurationDateTime(matching.startDate, matching.endDate)
+              ? <>
+                {convertDurationDateTime(matching.startDate, matching.endDate)}
+                &nbsp; <Link to={`/matching/${matchingId}/call`}>
+                  通話リンク
+                </Link>
+              </>
               : "調整中"
           }
         </p>
