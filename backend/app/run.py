@@ -159,16 +159,20 @@ def matches_list():  # マッチ履歴と予定
     # TODO: 「予定」と「終わった」マッチングを返す is_done_payment
 
     # TODO:所属返すのどうするか（必要機能か？）
-    matches = Match.query.filter_by(
-        listener_id=current_user_id, is_done_meeting=False
+
+    user_id = ["user_id"]
+    will_matches = Match.query.filter_by(
+        listener_id=user_id, is_done_meeting=False
     ).all()
-    done_mathches = Match.query.filter_by(
-        listener_id=current_user_id, is_done_meeting=True
+    done_matches = Match.query.filter_by(
+        listener_id=user_id, is_done_meeting=True
     ).all()
-    return matches_schema.jsonify(matches + done_mathches)
+    return matches_schema.jsonify(
+        {"will_matches": will_matches, "done_matches": done_matches}
+    )
 
 
-@app.route("/api/matching/apply", methods=["GET"])
+@app.route("/api/matching/apply", methods=["POST"])
 def apply_match():  # 申し込み
     speaker_id = request.json["speaker_id"]
     listener_id = request.json["listener_id"]
