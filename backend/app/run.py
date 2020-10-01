@@ -230,7 +230,7 @@ def matching():
 def search_companies():
     # 会社検索のエンドポイント
     query = request.args["q"]
-    company_models = Company.query.filter(Company.name.ilike(query)).all()
+    company_models = Company.query.filter(Company.name.ilike(f"%{query}%")).all()
 
     response = companies_schema.jsonify(company_models)
     company_list = response.json
