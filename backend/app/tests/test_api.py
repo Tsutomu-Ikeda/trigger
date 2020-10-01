@@ -52,7 +52,7 @@ class TestRegister:
             "user_type": "student",
             "type_card_url": "hoge.s3-aws.com",  # FIXME: S3 上の一意なファイル名になるかも
             "identity_card_url": "hogehoge.s3-aws.com",  # FIXME: S3 上の一意なファイル名になるかも
-            "affiliation": "My University",
+            "affiliation": "B 大学",
         }
         headers = {"Content-Type": "application/json"}
 
@@ -61,12 +61,6 @@ class TestRegister:
         res_json = res_success.json()
         print(res_json["message"])
         assert res_json["is_logined"] == True
-
-        # 2 回目のリクエスト: Email アドレスが同じなので失敗する
-        res_failed = requests.post(url=self.URL, json=payload, headers=headers)
-        res_json = res_failed.json()
-        print(res_json["message"])
-        assert res_json["is_logined"] == False
 
     def test_register_worker(self):
         pass
