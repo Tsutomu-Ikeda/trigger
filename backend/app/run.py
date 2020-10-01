@@ -147,6 +147,9 @@ def logout():
 @app.route("/api/matching", methods=["GET"])
 def matches_list():  # マッチ履歴と予定
     # http://hoge.com?key=value&key2=value2
+    # http://buttake-shukatu.com/api/matching?=value&key2=value2
+    # current_user_id = request.json["user_id"]  # POST
+    # current_user_id = request.args["user_id"]  # GET
     # value = request.args['key']
     # value2 = request.args['key2']
     # return jsonyfy({"user_id": "hoge"})
@@ -156,7 +159,7 @@ def matches_list():  # マッチ履歴と予定
     # TODO: 「予定」と「終わった」マッチングを返す is_done_payment
 
     # TODO:所属返すのどうするか（必要機能か？）
-    mathches = Match.query.filter_by(
+    matches = Match.query.filter_by(
         listener_id=current_user_id, is_done_meeting=False
     ).all()
     done_mathches = Match.query.filter_by(
