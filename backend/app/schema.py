@@ -1,4 +1,4 @@
-from flask_marshmallow import fields as m_fields
+from flask_marshmallow.fields import fields as m_fields
 from flask_marshmallow import Marshmallow
 
 from app import app
@@ -17,13 +17,6 @@ class StudentSchema(ma.Schema):
         fields = ()
 
 
-class WorkerSchema(ma.Schema):
-    class Meta:
-        fields = ("id", "email")
-    
-
-
-
 class UniversitySchema(ma.Schema):
     class Meta:
         fields = ("id", "name")
@@ -34,9 +27,17 @@ class CompanySchema(ma.Schema):
         fields = ("id", "name")
 
 
-class Job(ma.Schema):
+class JobSchema(ma.Schema):
     class Meta:
         fields = ("id", "name")
+
+
+class WorkerSchema(ma.Schema):
+    id = m_fields.fields.String()
+    job = m_fields.fields.Nested(JobSchema)
+    is_authenticated = m_fields.fields.Boolean()
+    comment = m_fields.fields.String()
+
 
 
 class MatchSchema(ma.Schema):
