@@ -107,16 +107,16 @@ class Match(db.Model):
 
     def __init__(
         self,
-        id,
-        name,
+        # id,
+        date,
         speaker_id,
         listener_id,
         is_matched,
         is_done_meeting,
         is_done_payment,
     ):
-        self.id = id
-        self.name = name
+        # self.id = id
+        self.date = date
         self.speaker_id = speaker_id
         self.listener_id = listener_id
         self.is_matched = is_matched
