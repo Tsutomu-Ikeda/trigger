@@ -82,7 +82,7 @@ class Job(db.Model):
     __tablename__ = "jobs"
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=False, nullable=False)
+    name = db.Column(db.String(80), unique=True, nullable=False)
 
 
 class Match(db.Model):
