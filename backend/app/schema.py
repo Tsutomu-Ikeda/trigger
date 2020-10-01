@@ -1,3 +1,4 @@
+from flask_marshmallow import fields as m_fields
 from flask_marshmallow import Marshmallow
 
 from app import app
@@ -19,6 +20,8 @@ class StudentSchema(ma.Schema):
 class WorkerSchema(ma.Schema):
     class Meta:
         fields = ("id", "email")
+    
+
 
 
 class UniversitySchema(ma.Schema):
@@ -27,6 +30,11 @@ class UniversitySchema(ma.Schema):
 
 
 class CompanySchema(ma.Schema):
+    class Meta:
+        fields = ("id", "name")
+
+
+class Job(ma.Schema):
     class Meta:
         fields = ("id", "name")
 
