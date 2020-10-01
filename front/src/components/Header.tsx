@@ -1,16 +1,13 @@
 
 import React, { useCallback, useContext } from 'react';
 import AppBar from '@material-ui/core/AppBar';
-import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 import Container from '@material-ui/core/Container';
 import Fab from '@material-ui/core/Fab';
 import Zoom from '@material-ui/core/Zoom';
@@ -33,9 +30,6 @@ const styles = (theme: Theme) =>
     },
     menuButton: {
       marginLeft: -theme.spacing(1),
-    },
-    iconButtonAvatar: {
-      padding: 4,
     },
     link: {
       textDecoration: 'none',
@@ -92,7 +86,6 @@ const ScrollTop = withStyles(styles)((props: ScrollTopProps) => {
     const anchor = ((event.target as HTMLDivElement).ownerDocument || document).querySelector(
       '#root',
     );
-    console.log(anchor);
     if (anchor) {
       anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -113,17 +106,10 @@ function Header(props: HeaderProps) {
   const { classes } = props;
   const location = useLocation();
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const logOut = useCallback(() => dispatch(LogOut()), [dispatch]);
+  const logOut = useCallback(() => {
+    dispatch(LogOut());
+    window.location.href = "/sign_in";
+  }, [dispatch]);
 
   return (
     <>
@@ -135,31 +121,12 @@ function Header(props: HeaderProps) {
             </Grid>
             {state.isAuthenticated ?
               <Grid item>
-                <IconButton
+                <Button
                   color="inherit"
-                  className={classes.iconButtonAvatar}
-                  onClick={handleMenu}
+                  onClick={logOut}
                 >
-                  <Avatar src="/static/images/avatar/1.jpg" alt="My Avatar" />
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={open}
-                  onClose={handleClose}
-                >
-                  <MenuItem onClick={handleClose}>プロフィール</MenuItem>
-                  <MenuItem onClick={logOut}>ログアウト</MenuItem>
-                </Menu>
+                  ログアウト
+                </Button>
               </Grid>
               : null}
           </Grid>

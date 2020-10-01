@@ -1,9 +1,18 @@
-import React, { createContext, useReducer, useEffect } from "react";
+import React, { createContext, useEffect } from "react";
+import { useReducerAsync } from "use-reducer-async";
 
-import { Actions, ActionType } from "./actions";
+import { signIn } from "libs/ServerClient";
+import {
+  Actions,
+  ActionType,
+  SaveLogIn
+} from "./actions";
 
 interface IStoreState {
   isAuthenticated: boolean;
+  user?: {
+    id: string;
+  };
 }
 
 interface IAppContext {
@@ -17,6 +26,7 @@ const localState = (
 
 const initialState: IStoreState = localState || {
   isAuthenticated: false,
+
 };
 
 const store = createContext<IAppContext>({
@@ -28,23 +38,33 @@ const { Provider } = store;
 
 const reducer = (state: IStoreState, action: Actions) => {
   switch (action.type) {
-    case ActionType.LogIn:
+    case ActionType.SaveLogIn:
       return {
         ...state,
-        isAuthenticated: true
+        isAuthenticated: true,
+        user: action.payload.user,
       };
     case ActionType.LogOut:
       return {
         ...state,
-        isAuthenticated: false
+        isAuthenticated: false,
+        user: undefined,
       };
     default:
       return state;
   }
 };
 
+const asyncActionHandlers = {
+  "auth/log_in": ({ dispatch }: { dispatch: React.Dispatch<Actions> }) => async (action: any) => {
+    const { email, password } = action.payload;
+
+    dispatch(SaveLogIn({ user: await signIn(email, password)}));
+  },
+};
+
 const AppProvider = ({ children }: { children: JSX.Element }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducerAsync(reducer, initialState, asyncActionHandlers);
 
   useStoreSideEffect(state, dispatch);
 

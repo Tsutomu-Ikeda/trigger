@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
   Box,
   Grow,
@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import makeStyles from "@material-ui/core/styles/makeStyles";
 
+import { store } from "store/store";
 import { getMessages, sendMessage } from "libs/ServerClient";
 
 const useStyles = makeStyles(theme => ({
@@ -38,8 +39,12 @@ const Message = ({
 }: {
   message: { id: string; text: string; writer: string; };
 }): React.ReactElement => {
+  const {
+    state
+  } = useContext(store);
+
   const isSelf = (message: { writer: string }) => {
-    const selfId = "42d5a38e-fd54-4ee5-8944-86e7f74e8893";
+    const selfId = state.user && state.user.id;
     return message.writer === selfId;
   };
 
@@ -96,8 +101,8 @@ export default function Chat({ roomId }: { roomId: string; }) {
     scrollBottom(messagesRef, "auto");
   }, [messagesRef]);
 
-  const onSendClick = () => {
-    setMessages([...messages, sendMessage(roomId, inputMessage)]);
+  const onSendClick = async () => {
+    setMessages([...messages, await sendMessage(roomId, inputMessage)]);
     setInputMessage("");
   }
 
@@ -121,9 +126,9 @@ export default function Chat({ roomId }: { roomId: string; }) {
         placeholder="メッセージを入力してください"
         value={inputMessage}
         onChange={(event) => setInputMessage(event.target.value)}
-        style={{ marginLeft: "5%", width: "80%", height: 40 }}
+        style={{ marginLeft: 10, width: "calc(100% - 70px)", height: 40 }}
       />
-      <button onClick={onSendClick} style={{ width: "15%" }} disabled={!inputMessage}>送信</button>
+      <button onClick={onSendClick} style={{ margin: 5, height: 30, width: 50, float: "right" }} disabled={!inputMessage}>送信</button>
     </div>
   </div>
 };
