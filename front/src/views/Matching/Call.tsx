@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import * as Tone from "tone";
 import Peer from 'skyway-js';
 
@@ -14,13 +14,21 @@ export default function Call() {
   const { id: matchingId } = useParams() as { id: string };
   const localVideo = useRef<HTMLVideoElement>(null);
   const remoteVideo = useRef<HTMLVideoElement>(null);
-  // const [room, setRoom] = useState(null as any);
+  const [participants, setParticipants] = useState([] as string[]);
   const micAudio = new Tone.UserMedia();
   const matching = getMatchingDetail(matchingId);
 
+  const addPeer = useCallback((peerId: string) => {
+    setParticipants([...participants, peerId])
+  }, [participants]);
+
+  const removePeer = useCallback((peerId: string) => {
+    setParticipants(participants.filter((item) => (item !== peerId)));
+  }, [participants]);
 
   useEffect(() => {
     peer.on("open", () => {
+      console.log(peer);
 
       micAudio.open().then(() => {
         const shifter = new Tone.PitchShift(5);
@@ -47,14 +55,21 @@ export default function Call() {
               (remoteVideo.current as any).srcObject = stream;
             });
 
-            room.on("peerJoin", async (a) => { console.log(a) })
+            room.on("peerJoin", async (peerId) => {
+              addPeer(peerId);
+            });
+
+            room.on("peerLeave", async (peerId) => {
+              console.log(peerId);
+              removePeer(peerId);
+            });
           }).catch(error => {
             console.error('mediaDevice.getUserMedia() error:', error);
             return;
           });
       });
     })
-  }, [matchingId, micAudio]);
+  }, [matchingId, micAudio, addPeer, removePeer]);
 
   return (
     <AuthRequired>
@@ -62,6 +77,8 @@ export default function Call() {
         <h3>{matching.speaker.companyName}</h3>
         <div><video width="400px" hidden autoPlay muted playsInline ref={localVideo}></video></div>
         <div>{peer && peer.id}</div>
+        <h3>参加者</h3>
+        {participants.map((item) => <div key={item}>{item}</div>)}
         <div><video width="400px" autoPlay playsInline ref={remoteVideo}></video></div>
       </div>
     </AuthRequired>
