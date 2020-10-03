@@ -47,7 +47,7 @@ class TestRegister:
             "date_of_birth": "20210331",
             "date_of_birth": date(2021, 3, 31).strftime("%Y%m%d"),
             "tel_number": "08012345678",
-            "email": "yskbsk13@gmail.com",
+            "email": "test-student@example.com",
             "password": "password",
             "user_type": "student",
             "type_card_url": "hoge.s3-aws.com",  # FIXME: S3 上の一意なファイル名になるかも
@@ -79,7 +79,7 @@ class TestLogin:
     #         "date_of_birth": "20210331",
     #         # "date_of_birth": date(2021, 3, 31),
     #         "tel_number": "08012345678",
-    #         "email": "yskbsk13@gmail.com",
+    #         "email": "test-student@example.com",
     #         "password": "password",
     #         "user_type": "student",
     #         "type_card_url": "hoge.s3-aws.com",  # FIXME: S3 上の一意なファイル名になるかも
@@ -96,4 +96,3 @@ class TestLogin:
 
     # def test_register_worker(self):
     #     pass
-

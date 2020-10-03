@@ -74,7 +74,7 @@ def generate_students(univertiy_ids):
             "name": "admin",
             "date_of_birth": date_of_birth,
             "tel_number": generate_phone_number(),
-            "email": "yskbsk13@gmail.com",
+            "email": "test-student@example.com",
             "password_hash": "password",
             "user_type": "student",
             "type_card_url": generate_random_name(50),  # FIXME: S3 上の一意なファイル名になるかも
@@ -120,7 +120,7 @@ def generate_workers(company_ids, job_ids):
             "name": "admin",
             "date_of_birth": date_of_birth,
             "tel_number": generate_phone_number(),
-            "email": "pytwbf201830@gmail.com",
+            "email": "test-worker@example.com",
             "password_hash": "password",
             "user_type": "worker",
             "is_authenticated": True,

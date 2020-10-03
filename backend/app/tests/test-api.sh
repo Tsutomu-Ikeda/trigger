@@ -17,7 +17,7 @@ echo "========================="
 echo "===== /api/login ========"
 echo "========================="
 
-curl -c cookie.txt -X POST -H "Content-Type: application/json" -d '{"email":"yskbsk13@gmail.com", "password": "password"}' localhost:8080/api/login
+curl -c cookie.txt -X POST -H "Content-Type: application/json" -d '{"email":"test-student@example.com", "password": "password"}' localhost:8080/api/login
 
 echo "=========================="
 echo "===== /api/logout ========"
